@@ -1,9 +1,11 @@
 astroid
+streamlit
 google-auth
 google-auth-oauthlib
 google-api-python-client
 matplotlib
 pandas
+protobuf
 numpy
 opencv-python
 wordcloud
