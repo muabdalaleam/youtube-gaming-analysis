@@ -10,16 +10,15 @@ subs_vs_channel_name_len = pio.read_json("plots/json/subs_vs_channel_name_len_li
 total_subs_vs_start_date = pio.read_json("plots/json/total_subs_for_channels_per_start_date.json")
 channel_subs_per_country = pio.read_json("plots/json/channels_subs_per_country.json")
 
+EXERNAL_STYLESHEETS = ['assets/style.css']
+
 app = Dash(__name__,
-           external_stylesheets= "style.css")
+           external_stylesheets= EXERNAL_STYLESHEETS)
 
 
-app.layout = html.Div(children=[
-    html.H1(children= "Youtube gaming analysis"),
-
-    html.Div(children='''
-         '''),
-
+app.layout = html.Div(children= [
+    html.Center(children= html.H2(children= "## Youtube gaming analysis")),
+    dcc.markdown("""this is sparta !!""")
     dcc.Graph(
         id='example-graph',
         figure= channel_subs_per_country)])
