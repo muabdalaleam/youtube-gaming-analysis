@@ -1,9 +1,15 @@
-from dash import Dash, html, dcc
+from dash import Dash, html, dcc, Output, Input
 import plotly.express as px
-#include <>
+import numpy as np
+import pickle
 import plotly.io as pio
 from datetime import datetime
 import pandas as pd
+
+pio.templates.default = "ggplot2"
+
+
+stacked_channels = pd.read_pickle("../Cleaned files/stacked_channels.pickle")
 
 channels_data_scatter_matrix = pio.read_json("plots/json/channels_data_scatter_matrix.json")
 channels_subs_growth = pio.read_json("plots/json/channels_subs_growth_per_time.json")
@@ -12,8 +18,14 @@ total_subs_vs_start_date = pio.read_json("plots/json/total_subs_for_channels_per
 youtubers_with_social_accounts = pio.read_json("plots/json/youtubers_count_with_social_accounts.json")
 channel_subs_per_country = pio.read_json("plots/json/channels_subs_per_country.json")
 
+with open('functions/z-score.pickle', 'rb') as f:
+    z_score = pickle.load(f)
 
 EXERNAL_STYLESHEETS = ['assets/style.css']
+
+outliers = z_score(stacked_channels["subscribers"].to_numpy())
+outliers_indexes = np.array(*np.where(np.isin(stacked_channels["subscribers"], outliers)))
+stacked_channels = stacked_channels.drop(outliers_indexes)
 
 app = Dash(__name__,
            external_stylesheets= EXERNAL_STYLESHEETS)
@@ -23,6 +35,7 @@ app.layout = html.Div(children= [
     
     html.Center(children= html.H1(children= [html.Span(
         "Youtube", style= {"color": "red"}), " Gaming Analysis"])),
+    
     
     dcc.Graph(
         id='channel_subs_per_country',
@@ -41,20 +54,59 @@ app.layout = html.Div(children= [
         figure= youtubers_with_social_accounts.update_layout(width= 610, height= 500),
         style= {'position': 'absolute','right': '10px', 'border': '2px solid #fc0303',
                 'display': 'inline-block'}),
+    
+    
+    dcc.Graph(id='channels_subs_growth',
+              style= {'position': 'absolute', 'border': '2px solid #fc0303', 'left': '10px',
+                      'display': 'inline-block', 'top': '1050px'}),
 
-    dcc.Graph(
-        id= 'channels_subs_growth',
-        figure= channels_subs_growth.update_layout(width= 1230,
-                                                   xaxis= dict(rangeslider= dict(
-                                                   visible= True))),
-        style= {'position': 'absolute','left': '10px', 'border': '2px solid #fc0303', 'top': '1020px',
-                'display': 'inline-block'})])
+    html.Div([
+        dcc.RangeSlider(min= stacked_channels["subscribers"].min(),
+                        max= stacked_channels["subscribers"].max(),
+                        value=[10000, 200000], id= 'subs_slider',
+                        marks= None, tooltip={"placement": "bottom", "always_visible": False})],
+                        style= {'top': '1025px', 'position': 'absolute', 'display': 'inline-block',
+                                'width': '1230px'})])
+    
+    
 
 @app.callback(
-    Output('output-container-range-slider', 'children'),
-    [Input('my-range-slider', 'value')])
-def update_output(value):
-    return 'You have selected "{}"'.format(value)
+    Output('channels_subs_growth', 'figure'),
+    [Input('subs_slider', 'value')])
+
+def plot_channels_subs_growth(value):
+    
+    time_df = stacked_channels.copy()
+
+
+    time_df = time_df[(time_df["subscribers"] > value[0]) &
+                      (time_df["subscribers"] < value[1])]
+
+    fig = px.line(time_df, x= "Collecting date", y= "subscribers",
+                  color_discrete_sequence= px.colors.sequential.Reds,
+                  color= "channel_name",
+                  hover_name= "channel_name")
+
+
+    fig.update_layout(
+        font_family= "Franklin Gothic",
+        hovermode= "closest",
+        width=1000,
+        height=400,
+        title= "Channels subscribers growth per time.<br>"+\
+               "<sub>*Youtube API down cast subscribers count</sub><br>")
+
+    fig.update_xaxes(
+        linecolor='black',
+        gridcolor='darkgrey')
+
+    fig.update_yaxes(
+        linecolor='black',
+        gridcolor='darkgrey')
+    
+    return fig.update_layout(width= 1230)
+
+
 
 
 if __name__ == '__main__':
