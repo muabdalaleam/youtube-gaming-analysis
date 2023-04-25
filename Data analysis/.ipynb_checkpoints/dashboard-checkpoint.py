@@ -11,8 +11,6 @@ pio.templates.default = "ggplot2"
 
 stacked_channels = pd.read_pickle("../Cleaned files/stacked_channels.pickle")
 
-channels_data_scatter_matrix = pio.read_json("plots/json/channels_data_scatter_matrix.json")
-channels_subs_growth = pio.read_json("plots/json/channels_subs_growth_per_time.json")
 subs_vs_channel_name_len = pio.read_json("plots/json/subs_vs_channel_name_len_line_chart.json")
 total_subs_vs_start_date = pio.read_json("plots/json/total_subs_for_channels_per_start_date.json")
 youtubers_with_social_accounts = pio.read_json("plots/json/youtubers_count_with_social_accounts.json")
@@ -21,7 +19,9 @@ channel_subs_per_country = pio.read_json("plots/json/channels_subs_per_country.j
 with open('functions/z-score.pickle', 'rb') as f:
     z_score = pickle.load(f)
 
+THEME_COLORS = ["#2e2e2e", "#fc0303"]
 EXERNAL_STYLESHEETS = ['assets/style.css']
+TODAY = datetime.now().strftime("%Y-%m-%d")
 
 outliers = z_score(stacked_channels["subscribers"].to_numpy())
 outliers_indexes = np.array(*np.where(np.isin(stacked_channels["subscribers"], outliers)))
@@ -34,39 +34,52 @@ app = Dash(__name__,
 app.layout = html.Div(children= [
     
     html.Center(children= html.H1(children= [html.Span(
-        "Youtube", style= {"color": "red"}), " Gaming Analysis"])),
-    
+        "Gaming", style= {"color": THEME_COLORS[1]}), " Channels Analysis"])),
     
     dcc.Graph(
         id='channel_subs_per_country',
         figure= channel_subs_per_country.update_layout(width= 610, height= 500),
-        style= {'position': 'absolute', 'border': '2px solid #fc0303','left': '10px',
+        style= {'position': 'absolute', 'border': f'2px solid {THEME_COLORS[0]}','left': '10px',
                 'display': 'inline-block'}),
     
     dcc.Graph(
         id= 'total_subs_vs_start_date',
         figure= total_subs_vs_start_date.update_layout(width= 1230),
-        style= {'position': 'absolute', 'left': '10px', 'top': '600px', 'border': '2px solid #fc0303',
+        style= {'position': 'absolute', 'left': '10px', 'top': '600px', 'border': f'2px solid {THEME_COLORS[0]}',
                 'display': 'inline-block'}),
 
     dcc.Graph(
         id= 'youtubers_with_social_accounts',
         figure= youtubers_with_social_accounts.update_layout(width= 610, height= 500),
-        style= {'position': 'absolute','right': '10px', 'border': '2px solid #fc0303',
+        style= {'position': 'absolute','right': '10px', 'border': f'2px solid {THEME_COLORS[0]}',
                 'display': 'inline-block'}),
     
     
     dcc.Graph(id='channels_subs_growth',
-              style= {'position': 'absolute', 'border': '2px solid #fc0303', 'left': '10px',
+              style= {'position': 'absolute', 'border': f'2px solid {THEME_COLORS[0]}', 'left': '10px',
                       'display': 'inline-block', 'top': '1050px'}),
 
-    html.Div([
+    
+    html.Div(["Subscribers range selector",
         dcc.RangeSlider(min= stacked_channels["subscribers"].min(),
                         max= stacked_channels["subscribers"].max(),
+                        step= 100,
                         value=[10000, 200000], id= 'subs_slider',
                         marks= None, tooltip={"placement": "bottom", "always_visible": False})],
-                        style= {'top': '1025px', 'position': 'absolute', 'display': 'inline-block',
-                                'width': '1230px'})])
+                        style= {'top': '1015px', 'position': 'absolute', 'display': 'inline-block',
+                                'width': '1230px'}),
+
+    
+    dcc.Graph(
+        id= 'subs_vs_channel_name_len',
+        figure= subs_vs_channel_name_len.update_layout(width= 1230, height= 400),
+        style= {'position': 'absolute','right': '20px', 'border': f'2px solid {THEME_COLORS[0]}',
+                'display': 'inline-block', 'top': '1468px'}),
+
+    html.Footer(["By: Muhammed Ahmed Abd-Al-Aleam Elsayegh", html.Br(),
+                 f"Last update: {TODAY}"],
+                style= {'background-color': '#ededed', 'position': 'absolute', 'top': '1900px',
+                        'padding': '3px'})])
     
     
 

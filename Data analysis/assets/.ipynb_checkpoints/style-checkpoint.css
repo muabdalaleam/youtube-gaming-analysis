@@ -2,3 +2,8 @@
   font-family: Franklin Gothic;
   font-weight: normal;
 }
+
+#subs_slider .rc-slider-track {
+  background-color: #2e2e2e;
+  color: #fc0303;
+}
