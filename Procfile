@@ -1,1 +1,0 @@
-web: gunicorn channels_dashboard:server

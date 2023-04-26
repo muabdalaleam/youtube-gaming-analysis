@@ -1,3 +1,4 @@
+# --------------------------Import packeges----------------------
 from dash import Dash, html, dcc, Output, Input
 import plotly.express as px
 import numpy as np
@@ -7,13 +8,15 @@ from datetime import datetime
 import pandas as pd
 
 pio.templates.default = "ggplot2"
+# ---------------------------------------------------------------
 
 
+# -------------Reading data and setting constants----------------
 stacked_channels = pd.read_pickle("../Cleaned files/stacked_channels.pickle")
 
 subs_vs_channel_name_len = pio.read_json("plots/json/subs_vs_channel_name_len_line_chart.json")
-total_subs_vs_start_date = pio.read_json("plots/json/total_subs_for_channels_per_start_date.json")
-youtubers_with_social_accounts = pio.read_json("plots/json/youtubers_count_with_social_accounts.json")
+video_stats_per_tag = pio.read_json("plots/json/video_stats_per_tag.json")
+tags_appendings_per_vid = pio.read_json("plots/json/tags_appendings_per_vid_bar_chart.json")
 channel_subs_per_country = pio.read_json("plots/json/channels_subs_per_country.json")
 
 with open('functions/z-score.pickle', 'rb') as f:
@@ -26,11 +29,12 @@ TODAY = datetime.now().strftime("%Y-%m-%d")
 outliers = z_score(stacked_channels["subscribers"].to_numpy())
 outliers_indexes = np.array(*np.where(np.isin(stacked_channels["subscribers"], outliers)))
 stacked_channels = stacked_channels.drop(outliers_indexes)
+# ---------------------------------------------------------------
 
+
+# ------------------Creating the dashboard-----------------------
 app = Dash(__name__,
            external_stylesheets= EXERNAL_STYLESHEETS)
-
-server = app.server
 
 app.layout = html.Div(children= [
     
@@ -81,9 +85,10 @@ app.layout = html.Div(children= [
                  f"Last update: {TODAY}"],
                 style= {'background-color': '#ededed', 'position': 'absolute', 'top': '1900px',
                         'padding': '3px'})])
-    
+# ---------------------------------------------------------------
     
 
+# -----------Running the app and creating extra plot-------------
 @app.callback(
     Output('channels_subs_growth', 'figure'),
     [Input('subs_slider', 'value')])
@@ -119,7 +124,8 @@ def plot_channels_subs_growth(value):
         gridcolor='darkgrey')
     
     return fig.update_layout(width= 1230)
+# ---------------------------------------------------------------
 
-
+# Run it:
 if __name__ == '__main__':
     app.run_server(debug=True)
