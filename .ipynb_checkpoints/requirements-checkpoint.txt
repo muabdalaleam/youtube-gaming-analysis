@@ -8,6 +8,7 @@ pandas
 protobuf
 numpy
 opencv-python
+gunicorn
 wordcloud
 chart_studio
 pycode

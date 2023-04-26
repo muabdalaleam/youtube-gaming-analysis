@@ -30,6 +30,7 @@ stacked_channels = stacked_channels.drop(outliers_indexes)
 app = Dash(__name__,
            external_stylesheets= EXERNAL_STYLESHEETS)
 
+server = app.server
 
 app.layout = html.Div(children= [
     
@@ -118,8 +119,6 @@ def plot_channels_subs_growth(value):
         gridcolor='darkgrey')
     
     return fig.update_layout(width= 1230)
-
-
 
 
 if __name__ == '__main__':
