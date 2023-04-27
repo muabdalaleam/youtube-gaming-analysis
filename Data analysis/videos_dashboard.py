@@ -19,10 +19,6 @@ duration_vs_views = pio.read_json("plots/json/desc_len_vs_views_scatter_plot.jso
 likes_vs_views = pio.read_json("plots/json/likes_vs_views_bubble_chart.json")
 video_stats_per_tag = pio.read_json("plots/json/video_stats_per_tag.json")
 
-
-with open('functions/z-score.pickle', 'rb') as f:
-    z_score = pickle.load(f)
-
     
 THEME_COLORS = ["#2e2e2e", "#fc0303"]
 EXERNAL_STYLESHEETS = ['assets/style.css']
@@ -38,7 +34,7 @@ app = Dash(__name__,
 app.layout = html.Div(children= [
     
     html.Center(children= html.H1(children= [html.Span(
-        "Gaming", style= {"color": THEME_COLORS[1]}), " Videos Analysis"])),
+        "Gaming", style= {"color": THEME_COLORS[1]}), " Videos Dashboard"])),
     
     dcc.Graph(
         id='videos_like_per_country',
@@ -58,11 +54,9 @@ app.layout = html.Div(children= [
         style= {'position': 'absolute', 'top': '600px', 'border': f'2px solid {THEME_COLORS[0]}',
                 'display': 'inline-block', 'left': '10px'}),
     
-    
         html.Div(["*Double click on legend buttons to isolate lines and bars."],
              style= {'position': 'absolute', 'top': '1120px', 'height': '20',
                 'display': 'inline-block', 'left': '10px'}),
-    
     
     dcc.Graph(
         id= 'video_stats_growth_per_time',
@@ -70,13 +64,11 @@ app.layout = html.Div(children= [
         style= {'position': 'absolute', 'top': '1140px', 'border': f'2px solid {THEME_COLORS[0]}',
                 'display': 'inline-block', 'left': '10px'}),
     
-    
     dcc.Graph(
         id= 'video_stats_per_tag',
         figure= video_stats_per_tag.update_layout(width= 1240, height= 500),
         style= {'position': 'absolute', 'top': '1660px', 'border': f'2px solid {THEME_COLORS[0]}',
                 'display': 'inline-block', 'left': '10px'}),
-
     
     dcc.Graph(
         id= 'likes_vs_views',
@@ -84,13 +76,11 @@ app.layout = html.Div(children= [
         style= {'position': 'absolute', 'top': '2180px', 'border': f'2px solid {THEME_COLORS[0]}',
                 'display': 'inline-block', 'left': '10px'}),
     
-
     html.Div(["By: Muhammed Ahmed Abd-Al-Aleam Elsayegh", html.Br(),
                  f"Last update: {TODAY}"],
                 style= {'background-color': '#ededed', 'top': '2800px', 'position': 'absolute'})])
 # ---------------------------------------------------------------
     
-
 
 # Run it:
 if __name__ == '__main__':

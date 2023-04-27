@@ -16,8 +16,10 @@ stacked_channels = pd.read_pickle("../Cleaned files/stacked_channels.pickle")
 
 subs_vs_channel_name_len = pio.read_json("plots/json/subs_vs_channel_name_len_line_chart.json")
 video_stats_per_tag = pio.read_json("plots/json/video_stats_per_tag.json")
+total_subs_vs_start_date = pio.read_json("plots/json/total_subs_for_channels_per_start_date.json")
 tags_appendings_per_vid = pio.read_json("plots/json/tags_appendings_per_vid_bar_chart.json")
 channel_subs_per_country = pio.read_json("plots/json/channels_subs_per_country.json")
+youtubers_with_social_accounts = pio.read_json("plots/json/youtubers_count_with_social_accounts.json")
 
 with open('functions/z-score.pickle', 'rb') as f:
     z_score = pickle.load(f)
@@ -39,7 +41,7 @@ app = Dash(__name__,
 app.layout = html.Div(children= [
     
     html.Center(children= html.H1(children= [html.Span(
-        "Gaming", style= {"color": THEME_COLORS[1]}), " Channels Analysis"])),
+        "Gaming", style= {"color": THEME_COLORS[1]}), " Channels Dashboard"])),
     
     dcc.Graph(
         id='channel_subs_per_country',
@@ -88,7 +90,7 @@ app.layout = html.Div(children= [
 # ---------------------------------------------------------------
     
 
-# ---------------Running the app and creating slider-------------
+# -----------Running the app and creating extra plot-------------
 @app.callback(
     Output('channels_subs_growth', 'figure'),
     [Input('subs_slider', 'value')])
