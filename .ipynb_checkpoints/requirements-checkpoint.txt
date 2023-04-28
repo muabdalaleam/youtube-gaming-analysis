@@ -12,6 +12,7 @@ gunicorn
 wordcloud
 chart_studio
 pycode
+emoji
 google-api-python-client
 panel
 IPython
@@ -19,6 +20,7 @@ pylint
 plotly
 seaborn
 fastparquet
+transformers
 pyarrow
 numba
 nltk
