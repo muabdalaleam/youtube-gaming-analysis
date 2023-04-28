@@ -28,9 +28,11 @@ GAMES = [*base_games["game"].unique()]
 with open('functions/z-score.pickle', 'rb') as f:
     z_score = pickle.load(f)
     
+base_games["game"] = base_games["game"].astype(str)
     
 tags_dict = {"Tags": [], "Views": [], "Comments": [], "Likes": [],
              "Count": [], "Games": []}
+
 total_views = []
 all_tags_temp = base_games["tags"].explode().explode().tolist()
 
@@ -46,7 +48,7 @@ for tags_chunk in all_tags_temp:
         tags_dict["Likes"].append(likes)
         tags_dict["Count"].append(1)
         tags_dict["Games"].append(game)
-    
+
 tags_df = pd.DataFrame({"Tag": tags_dict["Tags"],
                         "Views": tags_dict["Views"],
                         "Comments count": tags_dict["Comments"],
@@ -80,9 +82,9 @@ app.layout = html.Div(children= [
 
     html.Div(["Choose a game:",
         dcc.Dropdown(GAMES, "Minecraft" ,id= "game_dropdown")],
-                    style= {'top': '600px', 'position': 'absolute', 'display': 'inline-block',
+                     style= {'top': '600px', 'position': 'absolute', 'display': 'inline-block',
                             'width': '1230px'}),
-    
+
     dcc.Graph(id= "tags_per_game",
               style= {'top': '1120px', 'position': 'absolute', 'display': 'inline-block',
                       'width': '1230px', 'border': f'2px solid {THEME_COLORS[0]}'}),
@@ -96,17 +98,17 @@ app.layout = html.Div(children= [
 # ----------------------Making it interactive-------------------
 @app.callback(
     Output('tags_per_game', 'figure'),
-    Input('game_dropdown', 'value'))
+    [Input('game_dropdown', 'value')])
 
 def top_tags_per_game(value):
     
-    top_20_tags = tags_df[tags_df["Games"] == value].sort_values(
+    top_20_tags = tags_df.where(tags_df["Games"] == value).sort_values(
         by= "Count", ascending= False).head(20)
     
     fig = go.Figure(go.Bar(
         x= top_20_tags["Count"],
-        y= top_20_tags["Tags"],
-        name= top_20_tags["Tags"],
+        y= top_20_tags["Tag"],
+        name= top_20_tags["Tag"],
         orientation='h',
         marker=dict(
             color= THEME_COLORS[0],
