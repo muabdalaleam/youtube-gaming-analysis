@@ -1,8 +1,6 @@
 # --------------------------Import packeges----------------------
 from dash import Dash, html, dcc, Output, Input
 import plotly.express as px
-import numpy as np
-import pickle
 import plotly.io as pio
 from datetime import datetime
 import pandas as pd

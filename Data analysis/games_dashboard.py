@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import pickle
+import scipy
 import plotly.io as pio
 import ast
 from datetime import datetime
@@ -25,43 +26,42 @@ EXERNAL_STYLESHEETS = ['assets/style.css']
 TODAY = datetime.now().strftime("%Y-%m-%d")
 GAMES = [*base_games["game"].unique()]
 
-with open('functions/z-score.pickle', 'rb') as f:
-    z_score = pickle.load(f)
+with open('functions/tucky.pickle', 'rb') as f:
+    tucky_method = pickle.load(f)
     
-base_games["game"] = base_games["game"].astype(str)
+# base_games["game"] = base_games["game"].astype(str)
     
-tags_dict = {"Tags": [], "Views": [], "Comments": [], "Likes": [],
-             "Count": [], "Games": []}
+# tags_dict = {"Tags": [], "Views": [], "Comments": [], "Likes": [],
+#              "Count": [], "Games": []}
 
-total_views = []
-all_tags_temp = base_games["tags"].explode().explode().tolist()
+# total_views = []
+# all_tags_temp = base_games["tags"].explode().explode().tolist()
 
-for tags_chunk in all_tags_temp:
+# for tags_chunk in all_tags_temp:
     
-    for tag, views, comments, likes, game in zip(ast.literal_eval(tags_chunk), base_games["viewCount"],
-                                                 base_games["commentCount"], base_games["likeCount"],
-                                                 base_games["game"]):
+#     for tag, views, comments, likes, game in zip(ast.literal_eval(tags_chunk), base_games["viewCount"],
+#                                                  base_games["commentCount"], base_games["likeCount"],
+#                                                  base_games["game"]):
 
-        tags_dict["Tags"].append(tag)
-        tags_dict["Views"].append(views)
-        tags_dict["Comments"].append(comments)
-        tags_dict["Likes"].append(likes)
-        tags_dict["Count"].append(1)
-        tags_dict["Games"].append(game)
+#         tags_dict["Tags"].append(tag)
+#         tags_dict["Views"].append(views)
+#         tags_dict["Comments"].append(comments)
+#         tags_dict["Likes"].append(likes)
+#         tags_dict["Count"].append(1)
+#         tags_dict["Games"].append(game)
 
-tags_df = pd.DataFrame({"Tag": tags_dict["Tags"],
-                        "Views": tags_dict["Views"],
-                        "Comments count": tags_dict["Comments"],
-                        "Likes": tags_dict["Likes"],
-                        "Games": tags_dict["Games"],
-                        "Count": tags_dict["Count"]}).groupby('Tag').sum().astype({
-    "Views": np.uint32,
-    "Comments count": np.uint16,
-    "Count": np.uint16,
-    "Likes": np.uint32})
+# tags_df = pd.DataFrame({"Tag": tags_dict["Tags"],
+#                         "Views": tags_dict["Views"],
+#                         "Comments count": tags_dict["Comments"],
+#                         "Likes": tags_dict["Likes"],
+#                         "Games": tags_dict["Games"],
+#                         "Count": tags_dict["Count"]}).groupby('Tag').sum().astype({
+#     "Views": np.uint32,
+#     "Comments count": np.uint16,
+#     "Count": np.uint16,
+#     "Likes": np.uint32})
 
-# Set the column tag again after we turned it into index
-tags_df["Tag"] = tags_df.index
+# tags_df["Tag"] = tags_df.index
 # ---------------------------------------------------------------
 
 
@@ -85,7 +85,7 @@ app.layout = html.Div(children= [
                      style= {'top': '600px', 'position': 'absolute', 'display': 'inline-block',
                             'width': '1230px'}),
 
-    dcc.Graph(id= "tags_per_game",
+    dcc.Graph(id= "duration_vs_view",
               style= {'top': '1120px', 'position': 'absolute', 'display': 'inline-block',
                       'width': '1230px', 'border': f'2px solid {THEME_COLORS[0]}'}),
     
@@ -97,30 +97,40 @@ app.layout = html.Div(children= [
 
 # ----------------------Making it interactive-------------------
 @app.callback(
-    Output('tags_per_game', 'figure'),
+    Output('duration_vs_view', 'figure'),
     [Input('game_dropdown', 'value')])
 
-def top_tags_per_game(value):
+def duration_vs_view(value):
     
-    top_20_tags = tags_df.where(tags_df["Games"] == value).sort_values(
-        by= "Count", ascending= False).head(20)
+    outliers = tucky_method(base_games["viewCount"].to_numpy())
+    outliers_indexes = np.array(*np.where(np.isin(base_games["viewCount"], outliers)))
+    temp_df = base_games.drop(outliers_indexes)
     
-    fig = go.Figure(go.Bar(
-        x= top_20_tags["Count"],
-        y= top_20_tags["Tag"],
-        name= top_20_tags["Tag"],
-        orientation='h',
-        marker=dict(
-            color= THEME_COLORS[0],
-            line=dict(color= THEME_COLORS[1], width=3))))
+    temp_df = temp_df[base_games["game"] == value]
+    temp_df.sort_values("duration_in_minutes", ascending = False, inplace= True)
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x= temp_df["duration_in_minutes"],
+                             y= scipy.signal.savgol_filter(temp_df["viewCount"], 5, 2, mode='nearest'),
+                             line_shape='spline')) # fill down to xaxis
+                  
+    fig.add_trace(go.Scatter(x= temp_df["duration_in_minutes"],
+                             y= scipy.signal.savgol_filter(temp_df["likeCount"], 5, 2, mode='nearest'),
+                             line_shape='spline')) # fill down to xaxis
+                  
+    fig.add_trace(go.Scatter(x= temp_df["duration_in_minutes"],
+                             y= scipy.signal.savgol_filter(temp_df["commentCount"], 5, 2, mode='nearest'),
+                             line_shape='spline')) # fill down to xaxis
     
     fig.update_layout(
         font_family= "Franklin Gothic",
         hovermode= "closest",
+        xaxis_title= "Duration in minutes",
+        yaxis_title= "Stats",
         width=1240,
         height=500,
-        title=  "<span style='color: red'>Tags </span>" + \
-                "count")
+        title=  "<span style='color: red'>Video </span>" + \
+                "stats Vs video duration.")
     
     fig.update_xaxes(
         linecolor='black',
