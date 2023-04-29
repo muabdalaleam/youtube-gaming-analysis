@@ -6,14 +6,13 @@ google-api-python-client
 matplotlib
 pandas
 protobuf
+huggingface_hub
 numpy
 opencv-python
 gunicorn
 wordcloud
-chart_studio
 pycode
 emoji
-google-api-python-client
 panel
 IPython
 pylint
