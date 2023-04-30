@@ -9,6 +9,7 @@ protobuf
 huggingface_hub
 numpy
 opencv-python
+svgwrite
 gunicorn
 wordcloud
 pycode
