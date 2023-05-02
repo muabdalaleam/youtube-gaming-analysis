@@ -17,6 +17,7 @@ emoji
 panel
 IPython
 pylint
+xgboost 
 plotly
 seaborn
 fastparquet
