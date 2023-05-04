@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 from scipy import interpolate
 import plotly.express as px
 import numpy as np
+import pytz
 import pickle
 import plotly.io as pio
 from scipy import stats
@@ -25,10 +26,15 @@ video_stats_per_game = pio.read_json('plots/json/video_stats_per_game.json')
 THEME_COLORS = ["#2e2e2e", "#fc0303", "lightgrey"]
 EXERNAL_STYLESHEETS = ['assets/style.css']
 TODAY = datetime.now().strftime("%Y-%m-%d")
+TODAY = pytz.utc.localize(datetime.strptime(TODAY, "%Y-%m-%d"))
+
 GAMES = [*base_games["game"].unique()]
 
 with open('functions/tucky.pickle', 'rb') as f:
     tucky_method = pickle.load(f)
+    
+with open('functions/z-score.pickle', 'rb') as f:
+    z_score = pickle.load(f)
     
 # base_games["game"] = base_games["game"].astype(str)
     
@@ -111,19 +117,21 @@ app.layout = html.Div(children= [
 
 def duration_vs_view(value):
     
-    temp_df = temp_df.loc[base_games["game"] == value]
+    temp_df = base_games.loc[base_games["game"] == value]
+    temp_df = temp_df.reset_index()
     
-    outliers = tucky_method(base_games["viewCount"].to_numpy())
-    outliers_indexes = np.where(np.isin(base_games["viewCount"], outliers))[0]
-    temp_df = base_games.drop(outliers_indexes)
-    
-    temp_df.sort_values("duration_in_minutes", ascending = False, inplace= True)
-    
+    outliers = tucky_method(temp_df["viewCount"].to_numpy())
+    outliers_indices = np.where(np.isin(temp_df["viewCount"], outliers))[0]
+    temp_df = temp_df.drop(outliers_indices)
+
     
     # Dropping outliers again just to make sure that there aren't any outliers
-    z_scores = stats.zscore(temp_df["duration_in_minutes"])
-    temp_df = temp_df[np.abs(z_scores) < 2.5]
+    temp_df.reset_index(inplace= True)
+    outliers = tucky_method(temp_df["duration_in_minutes"].astype(float).to_numpy())
+    outliers_indices = np.where(np.isin(temp_df["duration_in_minutes"], outliers))[0]
+    temp_df = temp_df.drop(outliers_indices)
     
+    temp_df.sort_values("duration_in_minutes", ascending = False, inplace= True)
     
     fig = go.Figure()
     
@@ -166,24 +174,24 @@ def duration_vs_view(value):
 
 def stats_growth(value):
     
-    outliers = tucky_method(base_games["viewCount"].to_numpy())
-    outliers_indexes = np.where(np.isin(base_games["viewCount"], outliers))[0]
-    temp_df = base_games.drop(outliers_indexes)
+    temp_df = base_games.loc[base_games["game"] == value]
+    temp_df = temp_df.reset_index()
     
-    temp_df = temp_df.loc[base_games["game"] == value]
-    temp_df["publishedAt"] = temp_df["publishedAt"].astype("datetime64[ns]")
-    temp_df.sort_values(by= "publishedAt", inplace= True)
-    
+    outliers = tucky_method(temp_df["viewCount"].to_numpy())
+    outliers_indices = np.where(np.isin(temp_df["viewCount"], outliers))[0]
+    temp_df = temp_df.drop(outliers_indices)
 
-    video_age = datetime.strptime(TODAY, "%Y-%m-%d") - temp_df["publishedAt"]
-    
     # formatting video age into hours
-    temp_df["video_age"] = video_age.apply(lambda x: x.total_seconds() / 3600)
+    video_age = TODAY - temp_df["publishedAt"]
+    temp_df["video_age"] = video_age.apply(lambda x: x.total_seconds() / 60 ** 2)
     
-    z_scores = stats.zscore(temp_df["video_age"])
-    temp_df = temp_df[np.abs(z_scores) < 2.7]
-    
-    
+    # Dropping outliers again just to make sure that there aren't any outliers
+    temp_df.reset_index(inplace= True)
+    outliers = tucky_method(temp_df["video_age"].astype(float).to_numpy())
+    outliers_indices = np.where(np.isin(temp_df["video_age"], outliers))[0]
+    temp_df = temp_df.drop(outliers_indices)
+
+    temp_df.sort_values("video_age", ascending = False, inplace= True)
     
     fig = go.Figure()
     fig.add_trace(go.Scatter(x= temp_df["video_age"],
@@ -204,13 +212,14 @@ def stats_growth(value):
         linecolor='black',
         gridcolor='darkgrey')
     
+    temp_df['tick_labels'] = temp_df['video_age'] / 24
+    
     fig.update_xaxes(
         linecolor='black',
         gridcolor='darkgrey',
         tickmode = 'array',
-        tickvals = [500, 550, 600, 650, 700, 750],
-        ticktext = [f'{500/24:.0f}', f'{550/24:.0f}', f'{600/24:.0f}',
-                    f'{650/24:.0f}', f'{700/24:.0f}', f'{750/24:.0f}'])
+        tickvals = temp_df["video_age"][::4],
+        ticktext = temp_df['tick_labels'].astype(int))
     
     return fig
 

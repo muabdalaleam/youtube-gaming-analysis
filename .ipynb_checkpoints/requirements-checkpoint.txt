@@ -11,6 +11,7 @@ numpy
 opencv-python
 svgwrite
 gunicorn
+pytz
 wordcloud
 pycode
 emoji
