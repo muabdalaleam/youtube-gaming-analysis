@@ -1,11 +1,12 @@
 # --------------------------Import packeges----------------------
 from dash import Dash, html, dcc, Output, Input
 import plotly.graph_objects as go
+from scipy import interpolate
 import plotly.express as px
 import numpy as np
 import pickle
-import scipy
 import plotly.io as pio
+from scipy import stats
 import ast
 from datetime import datetime
 import pandas as pd
@@ -21,7 +22,7 @@ stacked_games = pd.read_pickle("../Cleaned files/stacked_games_df.pickle")
 
 video_stats_per_game = pio.read_json('plots/json/video_stats_per_game.json')
 
-THEME_COLORS = ["#2e2e2e", "#fc0303"]
+THEME_COLORS = ["#2e2e2e", "#fc0303", "lightgrey"]
 EXERNAL_STYLESHEETS = ['assets/style.css']
 TODAY = datetime.now().strftime("%Y-%m-%d")
 GAMES = [*base_games["game"].unique()]
@@ -86,8 +87,16 @@ app.layout = html.Div(children= [
                             'width': '1230px'}),
 
     dcc.Graph(id= "duration_vs_view",
-              style= {'top': '1120px', 'position': 'absolute', 'display': 'inline-block',
-                      'width': '1230px', 'border': f'2px solid {THEME_COLORS[0]}'}),
+              style= {'top': '680px', 'position': 'absolute', 'display': 'inline-block',
+                      'width': '1240px', 'border': f'2px solid {THEME_COLORS[0]}'}),
+    
+    dcc.Graph(id= "stats_growth",
+          style= {'top': '1220px', 'position': 'absolute', 'display': 'inline-block',
+                  'width': '1240px', 'border': f'2px solid {THEME_COLORS[0]}'}),
+    
+#     dcc.Graph(id= "stats_growth",
+#           style= {'top': '1220px', 'position': 'absolute', 'display': 'inline-block',
+#               'width': '1240px', 'border': f'2px solid {THEME_COLORS[0]}'}),
     
     html.Div(["By: Muhammed Ahmed Abd-Al-Aleam Elsayegh", html.Br(),
              f"Last update: {TODAY}"],
@@ -102,25 +111,33 @@ app.layout = html.Div(children= [
 
 def duration_vs_view(value):
     
+    temp_df = temp_df.loc[base_games["game"] == value]
+    
     outliers = tucky_method(base_games["viewCount"].to_numpy())
-    outliers_indexes = np.array(*np.where(np.isin(base_games["viewCount"], outliers)))
+    outliers_indexes = np.where(np.isin(base_games["viewCount"], outliers))[0]
     temp_df = base_games.drop(outliers_indexes)
     
-    temp_df = temp_df[base_games["game"] == value]
     temp_df.sort_values("duration_in_minutes", ascending = False, inplace= True)
     
+    
+    # Dropping outliers again just to make sure that there aren't any outliers
+    z_scores = stats.zscore(temp_df["duration_in_minutes"])
+    temp_df = temp_df[np.abs(z_scores) < 2.5]
+    
+    
     fig = go.Figure()
+    
     fig.add_trace(go.Scatter(x= temp_df["duration_in_minutes"],
-                             y= scipy.signal.savgol_filter(temp_df["viewCount"], 5, 2, mode='nearest'),
-                             line_shape='spline')) # fill down to xaxis
-                  
+                             y= temp_df["viewCount"], name= "Views",
+                             line= dict(color= THEME_COLORS[0], width=3, dash= 'dot')))
+    
     fig.add_trace(go.Scatter(x= temp_df["duration_in_minutes"],
-                             y= scipy.signal.savgol_filter(temp_df["likeCount"], 5, 2, mode='nearest'),
-                             line_shape='spline')) # fill down to xaxis
-                  
+                         y= temp_df["likeCount"], name= "Views",
+                         line= dict(color= THEME_COLORS[1], width=3, dash= 'dash')))
+
     fig.add_trace(go.Scatter(x= temp_df["duration_in_minutes"],
-                             y= scipy.signal.savgol_filter(temp_df["commentCount"], 5, 2, mode='nearest'),
-                             line_shape='spline')) # fill down to xaxis
+                     y= temp_df["commentCount"], name= "Likes",
+                     line= dict(color= THEME_COLORS[2], width=3, dash= 'dash')))
     
     fig.update_layout(
         font_family= "Franklin Gothic",
@@ -131,16 +148,72 @@ def duration_vs_view(value):
         height=500,
         title=  "<span style='color: red'>Video </span>" + \
                 "stats Vs video duration.")
-    
+
     fig.update_xaxes(
         linecolor='black',
         gridcolor='darkgrey')
+
+    fig.update_yaxes(
+        linecolor='black',
+        gridcolor='darkgrey')
+
+    return fig
+
+
+@app.callback(
+    Output('stats_growth', 'figure'),
+    [Input('game_dropdown', 'value')])
+
+def stats_growth(value):
     
+    outliers = tucky_method(base_games["viewCount"].to_numpy())
+    outliers_indexes = np.where(np.isin(base_games["viewCount"], outliers))[0]
+    temp_df = base_games.drop(outliers_indexes)
+    
+    temp_df = temp_df.loc[base_games["game"] == value]
+    temp_df["publishedAt"] = temp_df["publishedAt"].astype("datetime64[ns]")
+    temp_df.sort_values(by= "publishedAt", inplace= True)
+    
+
+    video_age = datetime.strptime(TODAY, "%Y-%m-%d") - temp_df["publishedAt"]
+    
+    # formatting video age into hours
+    temp_df["video_age"] = video_age.apply(lambda x: x.total_seconds() / 3600)
+    
+    z_scores = stats.zscore(temp_df["video_age"])
+    temp_df = temp_df[np.abs(z_scores) < 2.7]
+    
+    
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x= temp_df["video_age"],
+                             y= temp_df["viewCount"], name= "Views",
+                             line= dict(color= THEME_COLORS[1], width=3)))
+
+    fig.update_layout(
+        font_family= "Franklin Gothic",
+        hovermode= "closest",
+        xaxis_title= "Video age by day",
+        yaxis_title= "Views",
+        width=1240,
+        height=500,
+        title=  "Views <span style='color: red'>Growth </span>" + \
+                "per game")
+
     fig.update_yaxes(
         linecolor='black',
         gridcolor='darkgrey')
     
+    fig.update_xaxes(
+        linecolor='black',
+        gridcolor='darkgrey',
+        tickmode = 'array',
+        tickvals = [500, 550, 600, 650, 700, 750],
+        ticktext = [f'{500/24:.0f}', f'{550/24:.0f}', f'{600/24:.0f}',
+                    f'{650/24:.0f}', f'{700/24:.0f}', f'{750/24:.0f}'])
+    
     return fig
+
 
 # ---------------------------------------------------------------
 
