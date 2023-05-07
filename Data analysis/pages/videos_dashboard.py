@@ -22,11 +22,18 @@ video_stats_per_tag = pio.read_json("plots/json/video_stats_per_tag.json")
 THEME_COLORS = ["#2e2e2e", "#fc0303"]
 EXERNAL_STYLESHEETS = ['assets/style.css']
 TODAY = datetime.now().strftime("%Y-%m-%d")
+
+DISTANCE: int = 5
+N_WIDTH: int = 600 # normal width
+L_WIDTH: int = (N_WIDTH * 2) + DISTANCE # large width
+
+N_HEIGHT: int = 500
+L_HEIGHT: int = (N_HEIGHT * 2) + DISTANCE
 # ---------------------------------------------------------------
 
 
 # ------------------Creating the dashboard-----------------------
-register_page(__name__)
+register_page(__name__, image= "../imgs/logo.png")
 # app = dash.Dash(__name__)
 
 layout = html.Div(children= [
@@ -36,21 +43,24 @@ layout = html.Div(children= [
     
     dcc.Graph(
         id='videos_like_per_country',
-        figure= videos_like_per_country.update_layout(width= 610, height= 480),
-        style= {'position': 'absolute', 'border': f'2px solid {THEME_COLORS[0]}','left': '10px',
-                'display': 'inline-block'}, config= {'displaylogo': False}),
+        figure= videos_like_per_country.update_layout(width= N_WIDTH, height= N_HEIGHT),
+        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+                'display': 'inline-block','left': f'{DISTANCE}px'},
+        config= {'displaylogo': False}),
     
     dcc.Graph(
         id= 'social_accounts_affect_on_vid_stats',
-        figure= social_accounts_affect_on_vid_stats.update_layout(width= 610, height= 980),
-        style= {'position': 'absolute', 'right': '10px', 'border': f'2px solid {THEME_COLORS[0]}',
-                'display': 'inline-block'}, config= {'displaylogo': False}),
+        figure= social_accounts_affect_on_vid_stats.update_layout(width= N_WIDTH, height= L_WIDTH),
+        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+                'display': 'inline-block', 'right': f'{DISTANCE}px'},
+        config= {'displaylogo': False}),
 
     dcc.Graph(
         id= 'duration_vs_views',
-        figure= duration_vs_views.update_layout(width= 610, height= 480),
-        style= {'position': 'absolute', 'top': '640px', 'border': f'2px solid {THEME_COLORS[0]}',
-                'display': 'inline-block', 'left': '10px'}, config= {'displaylogo': False}),
+        figure= duration_vs_views.update_layout(width= N_WIDTH, height= N_HEIGHT),
+        style= {'position': 'relative', 'top': f'{N_HEIGHT + DISTANCE}px',
+                'display': 'inline-block', 'left': f'{DISTANCE}px', 'border': f'2px solid {THEME_COLORS[0]}'},
+        config= {'displaylogo': False}),
     
         html.Div(["*Double click on legend buttons to isolate lines and bars."],
              style= {'position': 'absolute', 'top': '1130px', 'height': '20',
