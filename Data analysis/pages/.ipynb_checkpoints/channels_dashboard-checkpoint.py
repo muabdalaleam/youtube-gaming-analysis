@@ -32,36 +32,55 @@ TODAY = datetime.now().strftime("%Y-%m-%d")
 outliers = z_score(stacked_channels["subscribers"].to_numpy())
 outliers_indexes = np.array(*np.where(np.isin(stacked_channels["subscribers"], outliers)))
 stacked_channels = stacked_channels.drop(outliers_indexes)
+
+DISTANCE: int = 5
+SPACE_DISTANCE = 0
+N_WIDTH: int = 600 # normal width
+L_WIDTH: int = (N_WIDTH * 2) + DISTANCE # large width
+
+N_HEIGHT: int = 500
+L_HEIGHT: int = (N_HEIGHT * 2) + DISTANCE
 # ---------------------------------------------------------------
 
 
 # ------------------Creating the dashboard-----------------------
-register_page(__name__, image= "../imgs/logo.png")
+register_page(__name__)
 
 layout = html.Div(children= [
     
     html.Center(children= html.H2(children= [html.Span(
         "Gaming", style= {"color": THEME_COLORS[1]}), " Channels Dashboard"])),
+
     
     dcc.Graph(
         id='channel_subs_per_country',
-        figure= channel_subs_per_country.update_layout(width= 610, height= 520),
-        style= {'position': 'absolute', 'border': f'2px solid {THEME_COLORS[0]}','left': '10px',
-                'display': 'inline-block'}, config= {'displaylogo': False}),
+        figure= channel_subs_per_country.update_layout(width= N_WIDTH, height= N_HEIGHT),
+        
+        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+                'display': 'inline-block', 'right': f'{DISTANCE}px'},
+        
+        config= {'displaylogo': False}),
 
 
     dcc.Graph(
         id= 'youtubers_with_social_accounts',
-        figure= youtubers_with_social_accounts.update_layout(width= 610, height= 520),
-        style= {'position': 'absolute','right': '10px', 'border': f'2px solid {THEME_COLORS[0]}',
-                'display': 'inline-block'}, config= {'displaylogo': False}),
+        figure= youtubers_with_social_accounts.update_layout(width= N_WIDTH, height= N_HEIGHT),
+        
+        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+                'display': 'inline-block', 'bottom': '0px', 'left': f'{DISTANCE * 2}px'},
+        
+        config= {'displaylogo': False}),
     
         
     dcc.Graph(
         id= 'total_subs_vs_start_date',
-        figure= total_subs_vs_start_date.update_layout(width= 1230),
-        style= {'position': 'absolute', 'left': '10px', 'top': '660px', 'border': f'2px solid {THEME_COLORS[0]}',
-                'display': 'inline-block'}, config= {'displaylogo': False}),
+        figure= total_subs_vs_start_date.update_layout(width= L_WIDTH + DISTANCE,
+                                                       height= N_HEIGHT),
+    
+        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+                'display': 'inline-block', 'top': f'{DISTANCE * 3}px', 'right': '0px'},
+    
+         config= {'displaylogo': False}),
     
     
     html.Div(["Subscribers range selector",
@@ -70,24 +89,29 @@ layout = html.Div(children= [
                         step= 100,
                         value=[10000, 200000], id= 'subs_slider',
                         marks= None, tooltip={"placement": "bottom", "always_visible": False})],
-                        style= {'top': '1075px', 'position': 'absolute', 'display': 'inline-block',
-                                'width': '1230px'}),
+                        style= {'position': 'relative', 'display': 'inline-block', 'top': f'{DISTANCE * 3}px',
+                                'width': f'{L_WIDTH}px'}),
     
     
     dcc.Graph(id='channels_subs_growth',
-              style= {'position': 'absolute', 'border': f'2px solid {THEME_COLORS[0]}', 'left': '10px',
-                      'display': 'inline-block', 'top': '1110px'}, config= {'displaylogo': False}),
+              style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+                      'display': 'inline-block', 'bottom': f'{DISTANCE}px'},
+    
+              config= {'displaylogo': False}),
 
 
     dcc.Graph(
         id= 'subs_vs_channel_name_len',
-        figure= subs_vs_channel_name_len.update_layout(width= 1230, height= 400),
-        style= {'position': 'absolute','right': '20px', 'border': f'2px solid {THEME_COLORS[0]}',
-                'display': 'inline-block', 'top': '1520px'}, config= {'displaylogo': False}),
+        figure= subs_vs_channel_name_len.update_layout(width= L_WIDTH, height= N_HEIGHT),
+        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+                'display': 'inline-block', 'top': f'{DISTANCE * 2}px'},
+        
+        config= {'displaylogo': False}),
 
+    
     html.Footer(["By: Muhammed Ahmed Abd-Al-Aleam Elsayegh", html.Br(),
                  f"Last update: {TODAY}"],
-                style= {'background-color': '#ededed', 'position': 'absolute', 'top': '2000px',
+                style= {'background-color': '#ededed', 'position': 'relative',
                         'padding': '3px'})])
 # ---------------------------------------------------------------
     
@@ -126,5 +150,5 @@ def plot_channels_subs_growth(value):
         linecolor='black',
         gridcolor='darkgrey')
     
-    return fig.update_layout(width= 1230, height= 390)
+    return fig.update_layout(width= L_WIDTH, height= N_HEIGHT)
 # ---------------------------------------------------------------

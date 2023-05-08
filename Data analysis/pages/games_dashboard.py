@@ -18,7 +18,6 @@ pio.templates.default = "ggplot2"
 
 
 # -------------Reading data and setting constants----------------
-register_page(__name__)
 
 base_games = pd.read_pickle("../Cleaned files/base_games.pickle")
 stacked_games = pd.read_pickle("../Cleaned files/stacked_games_df.pickle")
@@ -39,42 +38,62 @@ with open('functions/tucky.pickle', 'rb') as f:
 with open('functions/z-score.pickle', 'rb') as f:
     z_score = pickle.load(f)
 
+DISTANCE: int = 5
+SPACE_DISTANCE = 0
+N_WIDTH: int = 600 # normal width
+L_WIDTH: int = (N_WIDTH * 2) + DISTANCE # large width
+
+N_HEIGHT: int = 500
+L_HEIGHT: int = (N_HEIGHT * 2) + DISTANCE
 # ---------------------------------------------------------------
 
 
 # ------------------Creating the dashboard-----------------------
-# dash.register_page(__name__)
-# app = dash.Dash(__name__)
+register_page(__name__)
 
 layout = html.Div(children= [
 
     html.Center(children= html.H2(children= ["Analysis for specfic", html.Span(
         " Games ", style= {"color": THEME_COLORS[1]}), "Videos"])),
 
+    
     dcc.Graph(id= "video_stats_per_game",
-              figure= video_stats_per_game.update_layout(width= 1240, height= 495),
-              style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}', 'right': '10px',
-                      'display': 'inline-block'}, config= {'displaylogo': False}),
+              figure= video_stats_per_game.update_layout(width= L_WIDTH, height= N_HEIGHT),
+              style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+                      'display': 'inline-block', 'right': f'{DISTANCE * 2}px'},
+              
+              config= {'displaylogo': False}),
 
+    
     html.Div(["Choose a game:",
         dcc.Dropdown(GAMES, "Minecraft" ,id= "game_dropdown")],
-                     style= {'top': '640px', 'position': 'absolute', 'display': 'inline-block',
-                            'width': '1230px'}),
+                     style= {'position': 'relative', 'display': 'inline-block',
+                            'width': f'{L_WIDTH}px', 'right': f'{DISTANCE * 2}px'}),
 
+    
     dcc.Graph(id= "duration_vs_view",
-              style= {'top': '700px', 'position': 'absolute', 'display': 'inline-block',
-                      'width': '1240px', 'border': f'2px solid {THEME_COLORS[0]}'},
+              style= {'position': 'relative', 'display': 'inline-block', 'right': f'{DISTANCE * 2}px',
+                      'width': f'{L_WIDTH}px', 'top': f'{DISTANCE * 2}px',
+                      'border': f'2px solid {THEME_COLORS[0]}'},
+              
               config= {'displaylogo': False}),
     
+    
     dcc.Graph(id= "stats_growth",
-          style= {'top': '1220px', 'position': 'absolute', 'display': 'inline-block',
-                  'width': '1240px', 'border': f'2px solid {THEME_COLORS[0]}'},
+          style= {'top': f'{DISTANCE * 4}px', 'position': 'relative', 'display': 'inline-block',
+                  'width': f'{L_WIDTH}px', 'border': f'2px solid {THEME_COLORS[0]}',
+                  'right': f'{DISTANCE * 2}px'},
+              
           config= {'displaylogo': False}),
     
+    
     dcc.Graph(id= "top_tags",
-          style= {'top': '1740px', 'position': 'absolute', 'display': 'inline-block',
-              'width': '1240px', 'border': f'2px solid {THEME_COLORS[0]}'},
+          style= {'top': f'{DISTANCE * 6}px', 'position': 'relative', 'display': 'inline-block',
+                  'width': f'{L_WIDTH}px', 'border': f'2px solid {THEME_COLORS[0]}',
+                  'right': f'{DISTANCE * 2}px'},
+              
           config= {'displaylogo': False}),
+    
     
     html.Div(["By: Muhammed Ahmed Abd-Al-Aleam Elsayegh", html.Br(),
              f"Last update: {TODAY}"],
@@ -123,8 +142,8 @@ def duration_vs_view(value):
         hovermode= "closest",
         xaxis_title= "Duration in minutes",
         yaxis_title= "Stats",
-        width=1240,
-        height=500,
+        width= L_WIDTH,
+        height= N_HEIGHT,
         title=  "<span style='color: red'>Video </span>" + \
                 "stats Vs video duration.")
 
@@ -173,8 +192,8 @@ def stats_growth(value):
         hovermode= "closest",
         xaxis_title= "Video age by day",
         yaxis_title= "Views",
-        width=1240,
-        height=500,
+        width= L_WIDTH,
+        height= N_HEIGHT,
         title=  "Views <span style='color: red'>Growth </span>" + \
                 "per game")
 

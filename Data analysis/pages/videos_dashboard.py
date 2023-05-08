@@ -34,7 +34,7 @@ L_HEIGHT: int = (N_HEIGHT * 2) + DISTANCE
 
 
 # ------------------Creating the dashboard-----------------------
-register_page(__name__, image= "../imgs/logo.png")
+register_page(__name__)
 # app = dash.Dash(__name__)
 
 layout = html.Div(children= [
@@ -86,7 +86,7 @@ layout = html.Div(children= [
         figure= video_stats_growth_per_time.update_layout(width= L_WIDTH + DISTANCE,
                                                           height= N_HEIGHT),
     
-        style= {'position': 'relative', 'bottom': f'{N_HEIGHT - (6 * DISTANCE)}px',
+        style= {'position': 'relative', 'bottom': f'{N_HEIGHT - (4 * DISTANCE)}px',
                 'border': f'2px solid {THEME_COLORS[0]}',
                 'display': 'inline-block', 'left': 'hi'},
     
@@ -98,20 +98,27 @@ layout = html.Div(children= [
         figure= video_stats_per_tag.update_layout(width= L_WIDTH + DISTANCE,
                                                           height= N_HEIGHT),
     
-        style= {'position': 'relative', 'bottom': f'{N_HEIGHT + (DISTANCE)}px',
+        style= {'position': 'relative', 'bottom': f'{N_HEIGHT - (DISTANCE * 6)}px',
                 'border': f'2px solid {THEME_COLORS[0]}',
                 'display': 'inline-block', 'left': 'hi'},
     
         config= {'displaylogo': False}),
     
     
-# #     dcc.Graph(
-#         id= 'likes_vs_views',
-#         figure= likes_vs_views.update_layout(width= 1240, height= 500),
-#         style= {'position': 'absolute', 'top': '2190px', 'border': f'2px solid {THEME_COLORS[0]}',
-#                 'display': 'inline-block', 'left': '10px'}, config= {'displaylogo': False}),
+    dcc.Graph(
+        id= 'likes_vs_views',
+        figure= likes_vs_views.update_layout(width= L_WIDTH + DISTANCE,
+                                                          height= N_HEIGHT),
+    
+        style= {'position': 'relative', 'bottom': f'{N_HEIGHT - (DISTANCE * 8)}px',
+                'border': f'2px solid {THEME_COLORS[0]}',
+                'display': 'inline-block'},
+    
+        config= {'displaylogo': False}),
+    
     
     html.Div(["By: Muhammed Ahmed Abd-Al-Aleam Elsayegh", html.Br(),
                  f"Last update: {TODAY}"],
-                style= {'background-color': '#ededed', 'top': '2800px', 'position': 'absolute'})])
+                style= {'background-color': '#ededed', 'position': 'relative',
+                        'padding': '3px'})])
 # ---------------------------------------------------------------
