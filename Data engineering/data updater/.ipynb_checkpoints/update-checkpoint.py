@@ -39,7 +39,7 @@ youtube = build(
     API_SERVICE_NAME, API_VERSION, developerKey= API_KEY)
 
 
-print("starting ...\n")
+print("starting ...")
 
 # Collecting files into python variabels
 with open("../videos_ids.txt", "r") as vid:
@@ -162,7 +162,10 @@ channels_df.to_parquet(f"../data files/channels_{today.replace('-', '_')}.parque
 
 # Saving the stacked dataframes:
 
-directory_path = "../Data engineering/data files/"
+channels_files = []
+videos_files = []
+
+directory_path = "../data files"
 
 
 for file_name in os.listdir(directory_path):
@@ -172,8 +175,9 @@ for file_name in os.listdir(directory_path):
         
     elif ("videos" in file_name) and not("base" in file_name):
         videos_files.append(directory_path + file_name)
-        
-        
+     
+    
+
 videos_dfs = []
 channels_dfs = []
 

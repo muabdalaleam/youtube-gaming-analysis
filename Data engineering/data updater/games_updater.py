@@ -23,7 +23,7 @@ API_VERSION = "v3"
 youtube = build(
     API_SERVICE_NAME, API_VERSION, developerKey= API_KEY)
 
-print("starting ...\n")
+print("starting ...")
 # Looding the ID's and get the statistics
 with open('../pickels/games_ids.pickle', 'rb') as f:
     games_ids = pickle.load(f)
