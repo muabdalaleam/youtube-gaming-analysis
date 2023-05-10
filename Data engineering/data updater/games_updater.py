@@ -23,7 +23,7 @@ API_VERSION = "v3"
 youtube = build(
     API_SERVICE_NAME, API_VERSION, developerKey= API_KEY)
 
-
+print("starting ...\n")
 # Looding the ID's and get the statistics
 with open('../pickels/games_ids.pickle', 'rb') as f:
     games_ids = pickle.load(f)
@@ -34,6 +34,7 @@ def get_video_stats(youtube, video_ids: list) -> pd.DataFrame:
        for the statistics of the videos then save them into
        a DataFrame."""
 
+    dots = 1
     all_video_info = []
     videos_count = len(video_ids)
 
@@ -49,8 +50,14 @@ def get_video_stats(youtube, video_ids: list) -> pd.DataFrame:
         response = request.execute()
         
         # Calculate the progress with updating it.
-        print(f"Finished {processed_videos_count / videos_count * 100:.2f}% of loading the videos data")
-        os.system('cls' if os.name == 'nt' else 'clear')
+        
+        
+        dots += 1
+        print(f"Loading {dots * '.'}", end= "\r")
+        
+        if dots > 5:
+            dots = 1
+            
         time.sleep(0.001)
 
         for video in response['items']:
@@ -116,4 +123,5 @@ except:
 
 conn = sqlite3.connect('../../database.db')
 games_df.to_sql('stacked_games', conn, if_exists= 'append', index=False)
-print("Done succefully!!!")
+
+print("\nDone ...\n")

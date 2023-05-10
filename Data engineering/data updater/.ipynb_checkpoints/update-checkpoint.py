@@ -18,6 +18,7 @@ Programming Language: Python
 # Importing packeges
 from datetime import datetime
 import sqlite3
+import sys
 import json
 import time
 import numpy as np
@@ -37,6 +38,8 @@ API_VERSION = "v3"
 youtube = build(
     API_SERVICE_NAME, API_VERSION, developerKey= API_KEY)
 
+
+print("starting ...\n")
 
 # Collecting files into python variabels
 with open("../videos_ids.txt", "r") as vid:
@@ -69,8 +72,8 @@ def get_video_stats(youtube, video_ids: list) -> pd.DataFrame:
         response = request.execute()
         
         # Calculate the progress with updating it.
-        print(f"Finished {processed_videos_count / videos_count * 100:.2f}% of loading the videos data")
-        os.system('cls' if os.name == 'nt' else 'clear')
+        print(f"Finished {processed_videos_count / videos_count * 100:.2f}% of loading the videos data",
+              end= "\r")
         time.sleep(0.0001)
 
         for video in response['items']:
@@ -157,9 +160,6 @@ videos_df.to_parquet(f"../data files/videos_{today.replace('-', '_')}.parquet")
 channels_df.to_parquet(f"../data files/channels_{today.replace('-', '_')}.parquet")
 
 
-print("Done succefuly !!!!")
-
-
 # Saving the stacked dataframes:
 
 directory_path = "../Data engineering/data files/"
@@ -203,3 +203,5 @@ stacked_channels_df.to_sql('stacked_channels', conn, if_exists='replace', index=
 
 stacked_channels_df.to_pickle("../../Cleaned files/stacked_channels.pickle")
 stacked_videos_df.to_pickle("../../Cleaned files/stacked_videos.pickle")
+
+print("\nDone ...\n")
