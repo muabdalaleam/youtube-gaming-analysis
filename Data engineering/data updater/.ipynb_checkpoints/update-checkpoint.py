@@ -165,7 +165,7 @@ channels_df.to_parquet(f"../data files/channels_{today.replace('-', '_')}.parque
 channels_files = []
 videos_files = []
 
-directory_path = "../data files"
+directory_path = "../data files/"
 
 
 for file_name in os.listdir(directory_path):
