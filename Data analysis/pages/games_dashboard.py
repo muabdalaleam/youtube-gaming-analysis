@@ -97,7 +97,7 @@ layout = html.Div(children= [
     
     html.Div(["By: Muhammed Ahmed Abd-Al-Aleam Elsayegh", html.Br(),
              f"Last update: {TODAY}"],
-            style= {'background-color': '#ededed', 'top': '2780px', 'position': 'absolute'})])
+            style= {'background-color': '#ededed', 'position': 'relative'})])
 # ---------------------------------------------------------------
 
 
