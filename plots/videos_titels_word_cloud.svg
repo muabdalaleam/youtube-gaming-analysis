@@ -1,111 +1,222 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1544" height="968">
-<style>@font-face{font-family:'Franklin Gothic';font-weight:normal;font-style:normal;src:url("data:application/font-woff;charset=utf-8;base64,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")format("woff");}</style>
+<style>@font-face{font-family:'Franklin Gothic';font-weight:normal;font-style:normal;src:url("data:application/font-woff;charset=utf-8;base64,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")format("woff");}</style>
 <style>text{font-family:'Franklin Gothic';font-weight:normal;font-style:normal;}</style>
 <rect width="100%" height="100%" style="fill:white"></rect>
-<text transform="translate(342,166)" font-size="80" style="fill:rgb(20, 18, 19)">BUILD</text>
-<text transform="translate(608,478)" font-size="80" style="fill:rgb(23, 22, 23)">Gaming</text>
-<text transform="translate(146,634)" font-size="80" style="fill:rgb(65, 64, 65)">ТУЛААН</text>
-<text transform="translate(657,193)" font-size="80" style="fill:rgb(19, 17, 18)">BIGFOOT</text>
-<text transform="translate(964,653)" font-size="80" style="fill:rgb(76, 74, 75)">Part</text>
-<text transform="translate(1029,712)" font-size="80" style="fill:rgb(44, 43, 44)">New</text>
-<text transform="translate(873,581)" font-size="80" style="fill:rgb(86, 85, 85)">MAKO</text>
-<text transform="translate(349,225)" font-size="80" style="fill:rgb(90, 89, 89)">Glacier</text>
-<text transform="translate(211,567)" font-size="80" style="fill:rgb(20, 18, 19)">BASE</text>
-<text transform="translate(1095,566)" font-size="60" style="fill:rgb(20, 18, 19)">FIRST</text>
-<text transform="translate(1202,448)" font-size="60" style="fill:rgb(20, 18, 19)">OVR</text>
-<text transform="translate(589,273)" font-size="60" style="fill:rgb(45, 43, 44)">AROUND</text>
-<text transform="translate(644,647)" font-size="60" style="fill:rgb(171, 170, 171)">THREAT</text>
-<text transform="translate(1105,802)" font-size="60" style="fill:rgb(49, 47, 48)">NBA</text>
-<text transform="translate(709,407)" font-size="60" style="fill:rgb(20, 18, 19)">2K22</text>
-<text transform="translate(277,343)" font-size="60" style="fill:rgb(20, 18, 19)">Never</text>
-<text transform="translate(593,602) rotate(-90)" font-size="60" style="fill:rgb(20, 18, 19)">Made</text>
-<text transform="translate(206,682)" font-size="60" style="fill:rgb(20, 18, 19)">Medium</text>
-<text transform="translate(705,557)" font-size="60" style="fill:rgb(20, 18, 19)">Story</text>
-<text transform="translate(522,336)" font-size="54" style="fill:rgb(76, 75, 75)">ExplainedAladdin</text>
-<text transform="translate(923,382)" font-size="54" style="fill:rgb(130, 129, 130)">Deck</text>
-<text transform="translate(146,785)" font-size="54" style="fill:rgb(135, 134, 134)">Enhancer</text>
-<text transform="translate(418,684)" font-size="54" style="fill:rgb(154, 153, 153)">HistorianRunner</text>
-<text transform="translate(1042,319)" font-size="54" style="fill:rgb(20, 18, 19)">Vs</text>
-<text transform="translate(1164,610)" font-size="54" style="fill:rgb(20, 18, 19)">Deadly</text>
-<text transform="translate(695,601)" font-size="54" style="fill:rgb(20, 18, 19)">Bus</text>
-<text transform="translate(132,718)" font-size="46" style="fill:rgb(156, 155, 156)">GTA5СҮҮЛИЙН</text>
-<text transform="translate(1331,546) rotate(-90)" font-size="46" style="fill:rgb(154, 153, 153)">Wild</text>
-<text transform="translate(192,474)" font-size="46" style="fill:rgb(20, 18, 19)">Hearts</text>
-<text transform="translate(226,848)" font-size="46" style="fill:rgb(85, 83, 84)">Update</text>
-<text transform="translate(901,126)" font-size="46" style="fill:rgb(50, 48, 49)">Grimstalker</text>
-<text transform="translate(992,163)" font-size="46" style="fill:rgb(153, 153, 153)">Weapons</text>
-<text transform="translate(1057,259)" font-size="46" style="fill:rgb(23, 21, 22)">Armor</text>
-<text transform="translate(1045,214)" font-size="46" style="fill:rgb(20, 18, 19)">Quest</text>
-<text transform="translate(1066,746)" font-size="46" style="fill:rgb(102, 101, 101)">Kemono</text>
-<text transform="translate(1294,886) rotate(-90)" font-size="46" style="fill:rgb(144, 143, 143)">Endgame</text>
-<text transform="translate(242,259)" font-size="46" style="fill:rgb(20, 18, 19)">Systems</text>
-<text transform="translate(1046,490)" font-size="46" style="fill:rgb(20, 18, 19)">ComingTHE</text>
-<text transform="translate(654,230)" font-size="46" style="fill:rgb(20, 18, 19)">CRAZIEST</text>
-<text transform="translate(1145,664)" font-size="46" style="fill:rgb(20, 18, 19)">ENDING</text>
-<text transform="translate(251,751)" font-size="46" style="fill:rgb(20, 18, 19)">Little</text>
-<text transform="translate(352,101)" font-size="46" style="fill:rgb(20, 18, 19)">Nightmares</text>
-<text transform="translate(1187,898)" font-size="46" style="fill:rgb(20, 18, 19)">II</text>
-<text transform="translate(1234,709)" font-size="46" style="fill:rgb(20, 18, 19)">w</text>
-<text transform="translate(543,630) rotate(-90)" font-size="46" style="fill:rgb(20, 18, 19)">Jonathan</text>
-<text transform="translate(159,665)" font-size="46" style="fill:rgb(20, 18, 19)">Pt</text>
-<text transform="translate(1232,406) rotate(-90)" font-size="46" style="fill:rgb(201, 200, 201)">Cyberpunk</text>
-<text transform="translate(215,504)" font-size="45" style="fill:rgb(20, 18, 19)">Happened</text>
-<text transform="translate(1128,837)" font-size="45" style="fill:rgb(112, 111, 111)">Evelyn</text>
-<text transform="translate(630,641) rotate(-90)" font-size="45" style="fill:rgb(20, 18, 19)">Parker</text>
-<text transform="translate(158,433)" font-size="45" style="fill:rgb(20, 18, 19)">Exploring</text>
-<text transform="translate(203,399)" font-size="45" style="fill:rgb(20, 18, 19)">Details</text>
-<text transform="translate(1117,296)" font-size="45" style="fill:rgb(150, 149, 149)">Last</text>
-<text transform="translate(870,657)" font-size="45" style="fill:rgb(106, 105, 106)">Days</text>
-<text transform="translate(768,524)" font-size="45" style="fill:rgb(20, 18, 19)">Beat</text>
-<text transform="translate(285,299)" font-size="45" style="fill:rgb(20, 18, 19)">Mass</text>
-<text transform="translate(956,81)" font-size="45" style="fill:rgb(20, 18, 19)">Effect</text>
-<text transform="translate(175,814)" font-size="44" style="fill:rgb(110, 109, 110)">WITHOUT</text>
-<text transform="translate(245,220)" font-size="44" style="fill:rgb(19, 17, 18)">ME1</text>
-<text transform="translate(682,359)" font-size="35" style="fill:rgb(20, 18, 19)">Playthrough</text>
-<text transform="translate(939,684)" font-size="35" style="fill:rgb(174, 173, 174)">FNAF</text>
-<text transform="translate(813,604)" font-size="35" style="fill:rgb(35, 33, 34)">VANNY</text>
-<text transform="translate(407,554)" font-size="35" style="fill:rgb(20, 18, 19)">Mod</text>
-<text transform="translate(636,505)" font-size="35" style="fill:rgb(20, 18, 19)">Among</text>
-<text transform="translate(1032,409)" font-size="35" style="fill:rgb(19, 17, 18)">Us</text>
-<text transform="translate(1083,522)" font-size="35" style="fill:rgb(20, 18, 19)">TOMORROW</text>
-<text transform="translate(279,161)" font-size="35" style="fill:rgb(19, 17, 18)">got</text>
-<text transform="translate(514,283)" font-size="35" style="fill:rgb(19, 17, 18)">Phir</text>
-<text transform="translate(142,553)" font-size="35" style="fill:rgb(19, 17, 18)">Sy</text>
-<text transform="translate(408,579)" font-size="35" style="fill:rgb(20, 18, 19)">Zalmi</text>
-<text transform="translate(628,293)" font-size="30" style="fill:rgb(20, 18, 19)">gamingСҮҮЛИЙН</text>
-<text transform="translate(827,262)" font-size="30" style="fill:rgb(20, 18, 19)">Gamer</text>
-<text transform="translate(1258,907) rotate(-90)" font-size="30" style="fill:rgb(20, 18, 19)">finds</text>
-<text transform="translate(1069,456)" font-size="30" style="fill:rgb(20, 18, 19)">Teacher</text>
-<text transform="translate(169,874)" font-size="30" style="fill:rgb(186, 185, 185)">GamerShould</text>
-<text transform="translate(1259,374) rotate(-90)" font-size="30" style="fill:rgb(20, 18, 19)">Riot</text>
-<text transform="translate(897,444) rotate(-90)" font-size="30" style="fill:rgb(20, 18, 19)">Release</text>
-<text transform="translate(605,356)" font-size="30" style="fill:rgb(21, 19, 20)">Rob</text>
-<text transform="translate(1329,832) rotate(-90)" font-size="30" style="fill:rgb(185, 184, 185)">Blackblade</text>
-<text transform="translate(610,389)" font-size="30" style="fill:rgb(19, 17, 18)">League</text>
-<text transform="translate(184,362)" font-size="28" style="fill:rgb(20, 18, 19)">LegendsRust</text>
-<text transform="translate(197,328)" font-size="28" style="fill:rgb(20, 18, 19)">RAID</text>
-<text transform="translate(1174,705)" font-size="28" style="fill:rgb(20, 18, 19)">DAT</text>
-<text transform="translate(573,139)" font-size="28" style="fill:rgb(20, 18, 19)">Ep</text>
-<text transform="translate(697,427)" font-size="28" style="fill:rgb(20, 18, 19)">Rust</text>
-<text transform="translate(1121,627)" font-size="25" style="fill:rgb(20, 18, 19)">DesignFortnite</text>
-<text transform="translate(914,440) rotate(-90)" font-size="25" style="fill:rgb(20, 18, 19)">Fracture</text>
-<text transform="translate(1100,181)" font-size="25" style="fill:rgb(20, 18, 19)">REACTION</text>
-<text transform="translate(222,893)" font-size="25" style="fill:rgb(137, 137, 137)">Chapter</text>
-<text transform="translate(549,632)" font-size="25" style="fill:rgb(20, 18, 19)">END</text>
-<text transform="translate(826,686)" font-size="25" style="fill:rgb(197, 197, 197)">EVENT</text>
-<text transform="translate(1024,605)" font-size="25" style="fill:rgb(20, 18, 19)">CITY</text>
-<text transform="translate(431,243)" font-size="25" style="fill:rgb(153, 152, 152)">GAMINGBack</text>
-<text transform="translate(977,184)" font-size="25" style="fill:rgb(130, 129, 129)">Dead</text>
-<text transform="translate(1240,394)" font-size="25" style="fill:rgb(20, 18, 19)">3dfx</text>
-<text transform="translate(391,67)" font-size="25" style="fill:rgb(21, 19, 20)">Unreleased</text>
-<text transform="translate(1111,235)" font-size="25" style="fill:rgb(37, 35, 36)">Voodoo5</text>
-<text transform="translate(864,508)" font-size="25" style="fill:rgb(20, 18, 19)">Quad</text>
-<text transform="translate(1259,810) rotate(-90)" font-size="25" style="fill:rgb(20, 18, 19)">GPU</text>
-<text transform="translate(1185,680)" font-size="24" style="fill:rgb(20, 18, 19)">Cardaddressing</text>
-<text transform="translate(195,305)" font-size="24" style="fill:rgb(20, 18, 19)">discord</text>
-<text transform="translate(177,745)" font-size="24" style="fill:rgb(20, 18, 19)">drama</text>
-<text transform="translate(521,444)" font-size="24" style="fill:rgb(19, 17, 18)">Dark</text>
-<text transform="translate(386,782)" font-size="24" style="fill:rgb(20, 18, 19)">Side</text>
-<text transform="translate(616,409)" font-size="24" style="fill:rgb(19, 17, 18)">Griffin</text>
-<text transform="translate(605,187)" font-size="24" style="fill:rgb(20, 18, 19)">lmao</text>
+<text transform="translate(382,144)" font-size="80" style="fill:rgb(20, 18, 19)">v</text>
+<text transform="translate(212,340)" font-size="74" style="fill:rgb(20, 18, 19)">Game</text>
+<text transform="translate(481,629)" font-size="62" style="fill:rgb(24, 22, 23)">New</text>
+<text transform="translate(962,169)" font-size="62" style="fill:rgb(160, 159, 159)">Episode</text>
+<text transform="translate(683,195)" font-size="62" style="fill:rgb(20, 18, 19)">Glacier</text>
+<text transform="translate(1147,669)" font-size="62" style="fill:rgb(20, 18, 19)">ADOPT</text>
+<text transform="translate(554,581)" font-size="62" style="fill:rgb(49, 48, 49)">MEGA</text>
+<text transform="translate(779,374)" font-size="62" style="fill:rgb(20, 18, 19)">GTA RP</text>
+<text transform="translate(516,283)" font-size="62" style="fill:rgb(80, 79, 80)">RP Grizzley</text>
+<text transform="translate(953,569)" font-size="62" style="fill:rgb(148, 147, 147)">Grizzley World</text>
+<text transform="translate(882,628)" font-size="54" style="fill:rgb(131, 130, 130)">Gaming</text>
+<text transform="translate(1125,716)" font-size="54" style="fill:rgb(20, 18, 19)">TIME</text>
+<text transform="translate(635,673)" font-size="54" style="fill:rgb(139, 138, 139)">best</text>
+<text transform="translate(726,623)" font-size="54" style="fill:rgb(20, 18, 19)">got</text>
+<text transform="translate(532,182)" font-size="54" style="fill:rgb(20, 18, 19)">Every</text>
+<text transform="translate(1110,248)" font-size="54" style="fill:rgb(20, 18, 19)">Bot</text>
+<text transform="translate(231,537)" font-size="54" style="fill:rgb(20, 18, 19)">က</text>
+<text transform="translate(1063,509)" font-size="45" style="fill:rgb(20, 18, 19)">HistorianTHE</text>
+<text transform="translate(1151,772)" font-size="45" style="fill:rgb(20, 18, 19)">w</text>
+<text transform="translate(342,287) rotate(-90)" font-size="45" style="fill:rgb(20, 18, 19)">End</text>
+<text transform="translate(176,799)" font-size="45" style="fill:rgb(20, 18, 19)">Video</text>
+<text transform="translate(727,442)" font-size="45" style="fill:rgb(20, 18, 19)">MAX</text>
+<text transform="translate(316,694)" font-size="45" style="fill:rgb(20, 18, 19)">TH10</text>
+<text transform="translate(1183,757)" font-size="45" style="fill:rgb(20, 18, 19)">Lies</text>
+<text transform="translate(504,125)" font-size="45" style="fill:rgb(20, 18, 19)">Within</text>
+<text transform="translate(371,209)" font-size="45" style="fill:rgb(20, 18, 19)">Level</text>
+<text transform="translate(1106,797) rotate(-90)" font-size="45" style="fill:rgb(20, 18, 19)">Predator</text>
+<text transform="translate(213,595)" font-size="45" style="fill:rgb(20, 18, 19)">FOOTBALL</text>
+<text transform="translate(360,533) rotate(-90)" font-size="45" style="fill:rgb(20, 18, 19)">US</text>
+<text transform="translate(316,744)" font-size="45" style="fill:rgb(20, 18, 19)">Phir</text>
+<text transform="translate(847,483)" font-size="45" style="fill:rgb(20, 18, 19)">Sy</text>
+<text transform="translate(632,357)" font-size="45" style="fill:rgb(20, 18, 19)">Zalmi</text>
+<text transform="translate(1184,841)" font-size="45" style="fill:rgb(70, 68, 69)">Taking</text>
+<text transform="translate(531,325)" font-size="45" style="fill:rgb(104, 103, 103)">Opp</text>
+<text transform="translate(153,683)" font-size="45" style="fill:rgb(20, 18, 19)">Block</text>
+<text transform="translate(733,514)" font-size="45" style="fill:rgb(20, 18, 19)">NAGA</text>
+<text transform="translate(1051,474)" font-size="45" style="fill:rgb(20, 18, 19)">DRAGON</text>
+<text transform="translate(384,91)" font-size="45" style="fill:rgb(20, 18, 19)">HUGE</text>
+<text transform="translate(268,842)" font-size="45" style="fill:rgb(20, 18, 19)">PAY</text>
+<text transform="translate(813,552)" font-size="45" style="fill:rgb(20, 18, 19)">Trade</text>
+<text transform="translate(640,626)" font-size="45" style="fill:rgb(20, 18, 19)">OP</text>
+<text transform="translate(199,465)" font-size="45" style="fill:rgb(20, 18, 19)">Champions</text>
+<text transform="translate(844,658)" font-size="45" style="fill:rgb(175, 174, 174)">Learning</text>
+<text transform="translate(509,528)" font-size="45" style="fill:rgb(20, 18, 19)">ROLE</text>
+<text transform="translate(495,231)" font-size="45" style="fill:rgb(88, 87, 87)">League</text>
+<text transform="translate(377,659)" font-size="45" style="fill:rgb(20, 18, 19)">PS5</text>
+<text transform="translate(910,259) rotate(-90)" font-size="45" style="fill:rgb(20, 18, 19)">Exclusive</text>
+<text transform="translate(675,226)" font-size="45" style="fill:rgb(20, 18, 19)">Ferroseed</text>
+<text transform="translate(829,581)" font-size="34" style="fill:rgb(20, 18, 19)">Aladdin</text>
+<text transform="translate(748,582)" font-size="34" style="fill:rgb(20, 18, 19)">Deck</text>
+<text transform="translate(1096,620)" font-size="34" style="fill:rgb(20, 18, 19)">Enhancer</text>
+<text transform="translate(1286,468) rotate(-90)" font-size="34" style="fill:rgb(198, 197, 197)">CRAZIEST</text>
+<text transform="translate(154,495)" font-size="34" style="fill:rgb(20, 18, 19)">ENDING</text>
+<text transform="translate(154,648)" font-size="34" style="fill:rgb(20, 18, 19)">Little</text>
+<text transform="translate(1044,271)" font-size="34" style="fill:rgb(19, 17, 18)">Nightmares</text>
+<text transform="translate(538,682)" font-size="34" style="fill:rgb(19, 17, 18)">II</text>
+<text transform="translate(322,556)" font-size="34" style="fill:rgb(20, 18, 19)">Jonathan</text>
+<text transform="translate(1193,206)" font-size="34" style="fill:rgb(20, 18, 19)">Pt</text>
+<text transform="translate(973,96)" font-size="34" style="fill:rgb(20, 18, 19)">Found</text>
+<text transform="translate(179,380)" font-size="34" style="fill:rgb(20, 18, 19)">Portal</text>
+<text transform="translate(297,176)" font-size="34" style="fill:rgb(20, 18, 19)">Minecraft</text>
+<text transform="translate(627,656) rotate(-90)" font-size="34" style="fill:rgb(20, 18, 19)">Part</text>
+<text transform="translate(194,875)" font-size="34" style="fill:rgb(133, 132, 133)">Building</text>
+<text transform="translate(1199,801)" font-size="34" style="fill:rgb(20, 18, 19)">Rockets</text>
+<text transform="translate(271,634)" font-size="34" style="fill:rgb(20, 18, 19)">Space</text>
+<text transform="translate(592,472)" font-size="34" style="fill:rgb(20, 18, 19)">Sandbox</text>
+<text transform="translate(1040,206)" font-size="34" style="fill:rgb(19, 17, 18)">Juno</text>
+<text transform="translate(273,291) rotate(-90)" font-size="34" style="fill:rgb(19, 17, 18)">Origins</text>
+<text transform="translate(628,312)" font-size="34" style="fill:rgb(20, 18, 19)">Retro</text>
+<text transform="translate(180,712)" font-size="34" style="fill:rgb(20, 18, 19)">Hunting</text>
+<text transform="translate(1113,818)" font-size="34" style="fill:rgb(23, 21, 22)">Lost</text>
+<text transform="translate(1071,427) rotate(-90)" font-size="34" style="fill:rgb(149, 148, 149)">Footage</text>
+<text transform="translate(749,322)" font-size="34" style="fill:rgb(20, 18, 19)">2022JUST</text>
+<text transform="translate(618,396)" font-size="33" style="fill:rgb(20, 18, 19)">WALLSTOMORROW</text>
+<text transform="translate(1250,433) rotate(-90)" font-size="33" style="fill:rgb(208, 208, 208)">Gamingsaying</text>
+<text transform="translate(201,417)" font-size="33" style="fill:rgb(20, 18, 19)">goodbye</text>
+<text transform="translate(428,314) rotate(-90)" font-size="33" style="fill:rgb(55, 54, 55)">2k</text>
+<text transform="translate(481,712) rotate(-90)" font-size="33" style="fill:rgb(20, 18, 19)">eFOOTBALL</text>
+<text transform="translate(769,470)" font-size="33" style="fill:rgb(20, 18, 19)">DLS</text>
+<text transform="translate(454,753) rotate(-90)" font-size="33" style="fill:rgb(19, 17, 18)">FIFA</text>
+<text transform="translate(639,435)" font-size="33" style="fill:rgb(20, 18, 19)">VIVE</text>
+<text transform="translate(382,829) rotate(-90)" font-size="33" style="fill:rgb(20, 18, 19)">LE</text>
+<text transform="translate(1223,595)" font-size="33" style="fill:rgb(20, 18, 19)">TOTAL</text>
+<text transform="translate(171,753)" font-size="33" style="fill:rgb(19, 17, 18)">Realistic</text>
+<text transform="translate(436,140)" font-size="33" style="fill:rgb(20, 18, 19)">Free</text>
+<text transform="translate(363,244)" font-size="33" style="fill:rgb(27, 25, 26)">kickHide</text>
+<text transform="translate(1240,464)" font-size="33" style="fill:rgb(20, 18, 19)">n</text>
+<text transform="translate(161,601) rotate(-90)" font-size="33" style="fill:rgb(19, 17, 18)">Seek</text>
+<text transform="translate(920,122)" font-size="33" style="fill:rgb(21, 19, 20)">AMONG</text>
+<text transform="translate(769,680)" font-size="33" style="fill:rgb(223, 223, 223)">gamingEpisode</text>
+<text transform="translate(1193,889)" font-size="33" style="fill:rgb(115, 114, 114)">Entire</text>
+<text transform="translate(810,608)" font-size="33" style="fill:rgb(20, 18, 19)">City</text>
+<text transform="translate(759,654)" font-size="33" style="fill:rgb(26, 24, 25)">Bag</text>
+<text transform="translate(446,171)" font-size="33" style="fill:rgb(20, 18, 19)">Head</text>
+<text transform="translate(985,704)" font-size="33" style="fill:rgb(104, 103, 104)">GTA</text>
+<text transform="translate(620,505)" font-size="33" style="fill:rgb(20, 18, 19)">World</text>
+<text transform="translate(606,151)" font-size="32" style="fill:rgb(19, 17, 18)">WhitelistStuck</text>
+<text transform="translate(359,616)" font-size="32" style="fill:rgb(20, 18, 19)">Cave</text>
+<text transform="translate(1268,716)" font-size="32" style="fill:rgb(20, 18, 19)">Long</text>
+<text transform="translate(1111,843)" font-size="32" style="fill:rgb(116, 115, 115)">Dark</text>
+<text transform="translate(236,768)" font-size="21" style="fill:rgb(64, 63, 64)">PERMADEATHEpisode</text>
+<text transform="translate(1022,594)" font-size="21" style="fill:rgb(47, 45, 46)">WhitelistTOMORROW</text>
+<text transform="translate(296,133)" font-size="21" style="fill:rgb(20, 18, 18)">Fastest</text>
+<text transform="translate(1037,303)" font-size="21" style="fill:rgb(20, 18, 19)">Fortnite</text>
+<text transform="translate(1022,221)" font-size="21" style="fill:rgb(151, 150, 150)">Trios</text>
+<text transform="translate(321,786)" font-size="21" style="fill:rgb(20, 18, 19)">SKILLED</text>
+<text transform="translate(1071,792) rotate(-90)" font-size="21" style="fill:rgb(20, 18, 19)">رونمایی</text>
+<text transform="translate(994,390)" font-size="21" style="fill:rgb(92, 91, 91)">از</text>
+<text transform="translate(1064,182)" font-size="21" style="fill:rgb(20, 18, 19)">همسرجدید</text>
+<text transform="translate(500,652)" font-size="21" style="fill:rgb(65, 63, 64)">داهخش</text>
+<text transform="translate(1007,63)" font-size="21" style="fill:rgb(19, 17, 18)">امین</text>
+<text transform="translate(165,811) rotate(-90)" font-size="21" style="fill:rgb(20, 18, 19)">گردونه</text>
+<text transform="translate(863,516)" font-size="21" style="fill:rgb(20, 18, 19)">مک</text>
+<text transform="translate(325,204)" font-size="21" style="fill:rgb(20, 18, 19)">تن</text>
+<text transform="translate(245,897)" font-size="21" style="fill:rgb(108, 107, 107)">ساده</text>
+<text transform="translate(1200,860)" font-size="21" style="fill:rgb(20, 18, 19)">نمکی</text>
+<text transform="translate(542,201)" font-size="21" style="fill:rgb(20, 18, 19)">F</text>
+<text transform="translate(208,538)" font-size="21" style="fill:rgb(20, 18, 19)">L</text>
+<text transform="translate(523,445)" font-size="21" style="fill:rgb(20, 18, 19)">albino</text>
+<text transform="translate(182,622) rotate(-90)" font-size="21" style="fill:rgb(20, 18, 19)">gorilla</text>
+<text transform="translate(1256,306)" font-size="21" style="fill:rgb(20, 18, 19)">pet</text>
+<text transform="translate(652,526)" font-size="21" style="fill:rgb(20, 18, 19)">Classic</text>
+<text transform="translate(1118,298)" font-size="21" style="fill:rgb(197, 196, 197)">Nostalgic</text>
+<text transform="translate(977,194)" font-size="21" style="fill:rgb(126, 125, 126)">Old</text>
+<text transform="translate(215,555)" font-size="21" style="fill:rgb(20, 18, 19)">School</text>
+<text transform="translate(1261,771)" font-size="21" style="fill:rgb(20, 18, 19)">Modern</text>
+<text transform="translate(522,470)" font-size="21" style="fill:rgb(20, 18, 19)">Design</text>
+<text transform="translate(177,517)" font-size="21" style="fill:rgb(20, 18, 19)">Apple</text>
+<text transform="translate(1226,903)" font-size="21" style="fill:rgb(100, 98, 99)">Steve</text>
+<text transform="translate(484,572)" font-size="21" style="fill:rgb(20, 18, 19)">Jobs</text>
+<text transform="translate(1312,469) rotate(-90)" font-size="21" style="fill:rgb(89, 88, 88)">Atari</text>
+<text transform="translate(1183,523)" font-size="21" style="fill:rgb(20, 18, 19)">HistorianAn</text>
+<text transform="translate(1219,383) rotate(-90)" font-size="21" style="fill:rgb(20, 18, 19)">HONEST</text>
+<text transform="translate(277,368)" font-size="21" style="fill:rgb(20, 18, 19)">Guide</text>
+<text transform="translate(1264,691)" font-size="21" style="fill:rgb(20, 18, 19)">FINAL</text>
+<text transform="translate(325,710)" font-size="21" style="fill:rgb(20, 18, 19)">FANTASY</text>
+<text transform="translate(881,436)" font-size="21" style="fill:rgb(20, 18, 19)">XIV</text>
+<text transform="translate(1121,769) rotate(-90)" font-size="21" style="fill:rgb(20, 18, 19)">Degeneracy</text>
+<text transform="translate(292,283) rotate(-90)" font-size="21" style="fill:rgb(20, 18, 19)">BeginsEpisode</text>
+<text transform="translate(603,688)" font-size="21" style="fill:rgb(231, 231, 231)">WhitelistBasic</text>
+<text transform="translate(1047,113)" font-size="21" style="fill:rgb(20, 18, 19)">Image</text>
+<text transform="translate(1235,621)" font-size="21" style="fill:rgb(20, 18, 19)">Recognition</text>
+<text transform="translate(166,839)" font-size="21" style="fill:rgb(124, 122, 123)">PyAutoGUI</text>
+<text transform="translate(837,412)" font-size="21" style="fill:rgb(20, 18, 19)">Tutorial</text>
+<text transform="translate(510,487)" font-size="21" style="fill:rgb(21, 19, 20)">Completed</text>
+<text transform="translate(202,612)" font-size="21" style="fill:rgb(20, 18, 19)">MMO</text>
+<text transform="translate(847,279)" font-size="21" style="fill:rgb(20, 18, 19)">SNUCK</text>
+<text transform="translate(718,547)" font-size="21" style="fill:rgb(20, 18, 19)">BANNED</text>
+<text transform="translate(1024,662)" font-size="21" style="fill:rgb(20, 18, 19)">HOME</text>
+<text transform="translate(1020,522)" font-size="20" style="fill:rgb(19, 18, 18)">WALLSTrading</text>
+<text transform="translate(1107,788)" font-size="20" style="fill:rgb(21, 19, 20)">Amazing</text>
+<text transform="translate(368,257)" font-size="20" style="fill:rgb(20, 18, 19)">Monkey</text>
+<text transform="translate(910,168)" font-size="20" style="fill:rgb(20, 18, 19)">King</text>
+<text transform="translate(1042,441)" font-size="20" style="fill:rgb(20, 18, 19)">Roblox</text>
+<text transform="translate(252,655)" font-size="20" style="fill:rgb(20, 18, 19)">LegendsWhat</text>
+<text transform="translate(496,188)" font-size="20" style="fill:rgb(20, 18, 19)">fan</text>
+<text transform="translate(499,555)" font-size="20" style="fill:rgb(20, 18, 19)">wants</text>
+<text transform="translate(437,57)" font-size="20" style="fill:rgb(20, 18, 19)">Armored</text>
+<text transform="translate(1116,857)" font-size="20" style="fill:rgb(141, 141, 141)">Core</text>
+<text transform="translate(529,140)" font-size="20" style="fill:rgb(20, 18, 19)">6Why</text>
+<text transform="translate(294,302)" font-size="20" style="fill:rgb(20, 18, 19)">HUMILIATE</text>
+<text transform="translate(1174,163)" font-size="20" style="fill:rgb(20, 18, 19)">Man</text>
+<text transform="translate(1001,679)" font-size="20" style="fill:rgb(19, 17, 18)">Street</text>
+<text transform="translate(852,292)" font-size="20" style="fill:rgb(20, 18, 19)">Fighter</text>
+<text transform="translate(810,631)" font-size="20" style="fill:rgb(20, 18, 19)">X</text>
+<text transform="translate(518,344)" font-size="20" style="fill:rgb(205, 204, 204)">Tekken</text>
+<text transform="translate(300,147)" font-size="20" style="fill:rgb(20, 18, 19)">Outrage</text>
+<text transform="translate(1135,199)" font-size="20" style="fill:rgb(20, 18, 19)">KILLS</text>
+<text transform="translate(766,244)" font-size="20" style="fill:rgb(20, 18, 19)">GAMEPLAY</text>
+<text transform="translate(278,390)" font-size="20" style="fill:rgb(20, 18, 19)">SOLO</text>
+<text transform="translate(363,487)" font-size="20" style="fill:rgb(20, 18, 19)">SQUAD</text>
+<text transform="translate(277,531)" font-size="20" style="fill:rgb(20, 18, 19)">Pubg</text>
+<text transform="translate(554,203)" font-size="19" style="fill:rgb(20, 18, 19)">MobileEpisode</text>
+<text transform="translate(512,85)" font-size="19" style="fill:rgb(20, 18, 19)">Looking</text>
+<text transform="translate(738,482)" font-size="19" style="fill:rgb(20, 18, 19)">GG</text>
+<text transform="translate(808,409)" font-size="19" style="fill:rgb(20, 18, 19)">V1</text>
+<text transform="translate(174,816)" font-size="19" style="fill:rgb(20, 18, 19)">Trading</text>
+<text transform="translate(671,642)" font-size="19" style="fill:rgb(20, 18, 19)">Tier</text>
+<text transform="translate(1329,454) rotate(-90)" font-size="19" style="fill:rgb(140, 139, 140)">List</text>
+<text transform="translate(280,608)" font-size="19" style="fill:rgb(20, 18, 19)">Mode</text>
+<text transform="translate(1230,732)" font-size="19" style="fill:rgb(20, 18, 19)">Brawlers</text>
+<text transform="translate(914,197)" font-size="19" style="fill:rgb(24, 22, 23)">Brawl</text>
+<text transform="translate(362,506)" font-size="19" style="fill:rgb(20, 18, 19)">Stars</text>
+<text transform="translate(265,688)" font-size="19" style="fill:rgb(20, 18, 19)">Sony</text>
+<text transform="translate(609,370)" font-size="19" style="fill:rgb(19, 17, 18)">Announces</text>
+<text transform="translate(588,667)" font-size="19" style="fill:rgb(21, 19, 20)">Will</text>
+<text transform="translate(310,117)" font-size="19" style="fill:rgb(20, 18, 19)">Release</text>
+<text transform="translate(162,453)" font-size="19" style="fill:rgb(20, 18, 19)">Day</text>
+<text transform="translate(278,505)" font-size="19" style="fill:rgb(20, 18, 19)">Date'</text>
+<text transform="translate(998,720)" font-size="19" style="fill:rgb(124, 123, 123)">PC10</text>
+<text transform="translate(174,725)" font-size="19" style="fill:rgb(20, 18, 19)">Legendsကလ</text>
+<text transform="translate(361,80)" font-size="19" style="fill:rgb(19, 17, 18)">လ</text>
+<text transform="translate(1185,435)" font-size="19" style="fill:rgb(20, 18, 19)">မ</text>
+<text transform="translate(1090,88)" font-size="19" style="fill:rgb(20, 18, 19)">အသည</text>
+<text transform="translate(625,299) rotate(-90)" font-size="19" style="fill:rgb(20, 18, 19)">ပ</text>
+<text transform="translate(1057,239)" font-size="19" style="fill:rgb(20, 18, 19)">Baby</text>
+<text transform="translate(217,911)" font-size="19" style="fill:rgb(144, 143, 143)">Gang</text>
+<text transform="translate(812,147)" font-size="19" style="fill:rgb(20, 18, 19)">Roleplay</text>
+<text transform="translate(1277,748)" font-size="19" style="fill:rgb(20, 18, 19)">3How</text>
+<text transform="translate(347,277)" font-size="19" style="fill:rgb(20, 18, 19)">GOOD</text>
+<text transform="translate(363,104)" font-size="19" style="fill:rgb(20, 18, 19)">ACTUALLY</text>
+<text transform="translate(237,437)" font-size="19" style="fill:rgb(20, 18, 19)">History</text>
+<text transform="translate(1039,409) rotate(-90)" font-size="19" style="fill:rgb(69, 68, 68)">Competitive</text>
+<text transform="translate(173,394)" font-size="19" style="fill:rgb(19, 17, 18)">PokemonI</text>
+<text transform="translate(1186,773)" font-size="19" style="fill:rgb(20, 18, 19)">gamingIt</text>
+<text transform="translate(145,720) rotate(-90)" font-size="19" style="fill:rgb(19, 17, 18)">GamingThe</text>
+<text transform="translate(940,589)" font-size="19" style="fill:rgb(20, 18, 19)">Story</text>
+<text transform="translate(1132,732)" font-size="19" style="fill:rgb(20, 18, 19)">Super</text>
+<text transform="translate(1211,917)" font-size="19" style="fill:rgb(162, 162, 162)">Mario</text>
+<text transform="translate(899,330)" font-size="19" style="fill:rgb(20, 18, 19)">Last</text>
+<text transform="translate(308,807)" font-size="19" style="fill:rgb(20, 18, 19)">HBO</text>
+<text transform="translate(680,411)" font-size="19" style="fill:rgb(20, 18, 19)">Show</text>
+<text transform="translate(1350,699) rotate(-90)" font-size="19" style="fill:rgb(189, 188, 189)">Official</text>
+<text transform="translate(721,530)" font-size="19" style="fill:rgb(20, 18, 19)">Trailer</text>
+<text transform="translate(1109,126)" font-size="19" style="fill:rgb(20, 18, 19)">Reaction</text>
+<text transform="translate(361,522)" font-size="19" style="fill:rgb(20, 18, 19)">Analysis</text>
+<text transform="translate(608,325)" font-size="19" style="fill:rgb(20, 18, 19)">Discussion</text>
 </svg>
