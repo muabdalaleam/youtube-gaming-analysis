@@ -6,8 +6,10 @@ google-api-python-client
 apache-airflow
 matplotlib
 pandas
+statsmodels
 protobuf
 huggingface_hub
+mord
 numpy
 opencv-python
 svgwrite
