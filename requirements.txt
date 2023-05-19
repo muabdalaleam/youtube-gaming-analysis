@@ -8,6 +8,7 @@ matplotlib
 pandas
 statsmodels
 protobuf
+keras
 huggingface_hub
 mord
 numpy
