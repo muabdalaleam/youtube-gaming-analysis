@@ -6,6 +6,7 @@ google-api-python-client
 apache-airflow
 matplotlib
 tensorflow
+pytube
 pandas
 statsmodels
 protobuf
