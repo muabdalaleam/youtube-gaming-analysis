@@ -38,10 +38,37 @@ for processor_name, processor in preprocessors.items():
 
 
 # ==================Getting user interacts====================
-channel_name = st.text_input("Input your **YouTube :red[Channel]** name:", "AboFlah")
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        
+local_css("style.css")
+
+channel_name = st.text_input("Input your **YouTube :red[Channel]** name: ", "AboFlah")
 
 video_title = st.text_input(
     "Enter the title of the **:red[Video] name** name you want to create: ")
+
+duration_in_minutes = st.text_input(
+    "Enter Your **Video Duration in :red[Minutes]:**", 0)
+
+try:
+    duration_in_seconds = int(st.text_input(
+        "(Optional) Enter Your **Video Duration in :red[Seconds]:**",
+        int(duration_in_minutes) * 60))
+    
+except:
+    st.error("Enter duration as integer.")
+
+thumbnail = st.file_uploader("Upload or drag & drop your **Video :red[Thumbnail]** image: ")
+
+
+with st.sidebar:
+    add_radio = st.radio(
+        "Choose a shipping method",
+        ("Standard (5-15 days)", "Express (2-5 days)"))
+    
+
 # ============================================================
 
 
