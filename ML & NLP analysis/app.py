@@ -2,14 +2,24 @@
 import streamlit as st
 import tensorflow as tf
 import keras
+import nltk
 import pickle
 import pandas as pd
 import numpy as np
 import pandasql as ps
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
+from nltk.corpus import wordnet
+from datetime import datetime
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 from googleapiclient.discovery import build
 import googleapiclient.errors
+
+TEXT_COLUMNS = ["title", "description", "channelTitle", "about"]
+NUMERICS = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64',
+            'uint16', 'uint32', 'uint64', float, int]
+
 # ============================================================
 
 
@@ -141,7 +151,7 @@ def get_videos_ids(playlist_id, max_results = [50]):
 
     else:
         max_results[0] -= int(channel_stats["video_count"][0])
-        videos_ids = get_videos_stats(playlist_id, max_results[0])
+        videos_ids = get_videos_ids(playlist_id, max_results[0])
         
     return  videos_ids
 
@@ -156,7 +166,6 @@ def get_video_stats(videos_ids: list) -> pd.DataFrame:
        a DataFrame."""
 
     all_video_info = []
-    thumbnails = []
     videos_count = len(videos_ids)
 
     for i in range(0, videos_count, 50):
@@ -203,6 +212,76 @@ df = pd.merge(videos_stats, channel_stats, on= "channel_name")
 
 
 # ==================Feature engineering=======================
+
+# preparing NLTK data
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('stopwords-hi')
+nltk.download('stopwords-ar')
+nltk.download('averaged_perceptron_tagger')
+
+
+en_stopwords = set(stopwords.words('english')) 
+ar_stopwords = set(stopwords.words('arabic')) 
+# hi_stopwords = set(stopwords.words('hindi')) 
+
+all_stopwords = en_stopwords.union(ar_stopwords)
+
+# POS tagging
+
+def stopwords_dropper(words: list, stopwords: set) -> list:
+    
+    # Removing stop words from unalphabetical chars
+    filtered_words = [re.sub(r"[\W_]", "", word) for word in words
+                      if not word in stopwords]
+    
+    filtered_words = list(filter(lambda item: item != "", filtered_words))
+    return  filtered_words
+
+for col in TEXT_COLUMNS:
+    df[f"{col}_pos_tags"] = df[f"{col}_tokens"].apply(lambda words: nltk.pos_tag(words))
+
+
+# Limmization text
+
+def get_wordnet_pos(treebank_tag: str) -> str:
+    
+    if treebank_tag.startswith('J'):
+        return wordnet.ADJ
+    
+    elif treebank_tag.startswith('V'):
+        return wordnet.VERB
+    
+    elif treebank_tag.startswith('N'):
+        return wordnet.NOUN
+    
+    elif treebank_tag.startswith('R'):
+        return wordnet.ADV
+    
+    else:
+        return wordnet.NOUN
+
+
+lemmatizer = WordNetLemmatizer()
+lemmatized_words = []
+lemmatized_words_group = []
+
+for col in TEXT_COLUMNS:
+    for index, row in df.iterrows():
+        for token, pos_tag in zip(row[f"{col}_tokens"], row[f"{col}_pos_tags"]):
+
+            wordnet_pos = get_wordnet_pos(pos_tag[1])
+            lemmatized_words_group.append(lemmatizer.lemmatize(token, pos= wordnet_pos))
+            lemmatized_words_group = list(set(lemmatized_words_group)) # Dropping duplicates
+
+
+        lemmatized_words.append(lemmatized_words_group)
+        lemmatized_words_group = [] # clearing this list
+    
+    df[f"{col}_tokens"] = lemmatized_words
+    lemmatized_words = []
+
 
 # ============================================================
 
