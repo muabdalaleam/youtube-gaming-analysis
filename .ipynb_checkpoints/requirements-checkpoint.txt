@@ -3,6 +3,8 @@ streamlit
 google-auth
 google-auth-oauthlib
 google-api-python-client
+bs4
+requests
 apache-airflow
 matplotlib
 tensorflow
