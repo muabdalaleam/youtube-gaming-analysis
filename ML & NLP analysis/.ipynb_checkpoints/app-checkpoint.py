@@ -1,15 +1,26 @@
 # ==================Import the packeges=======================
 import streamlit as st
+import re
 import tensorflow as tf
+import pytz
 import keras
+import nltk
 import pickle
 import pandas as pd
 import numpy as np
 import pandasql as ps
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
+from nltk.corpus import wordnet
+from datetime import datetime
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 from googleapiclient.discovery import build
 import googleapiclient.errors
+
+TEXT_COLUMNS = ["title", "description", "channel_name", "about"]
+NUMERICS = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64',
+            'uint16', 'uint32', 'uint64', float, int]
 # ============================================================
 
 
@@ -141,7 +152,7 @@ def get_videos_ids(playlist_id, max_results = [50]):
 
     else:
         max_results[0] -= int(channel_stats["video_count"][0])
-        videos_ids = get_videos_stats(playlist_id, max_results[0])
+        videos_ids = get_videos_ids(playlist_id, max_results[0])
         
     return  videos_ids
 
@@ -156,7 +167,6 @@ def get_video_stats(videos_ids: list) -> pd.DataFrame:
        a DataFrame."""
 
     all_video_info = []
-    thumbnails = []
     videos_count = len(videos_ids)
 
     for i in range(0, videos_count, 50):
@@ -194,7 +204,7 @@ def get_video_stats(videos_ids: list) -> pd.DataFrame:
 videos_stats = get_video_stats(videos_ids)
 
 channel_stats.drop(["playlist_id"], axis= 1, inplace= True)
-videos_stats = videos_stats.rename({"channelTitle": "channel_name"})
+videos_stats = videos_stats.rename({"channelTitle": "channel_name"}, axis= 1)
 
 # Concating the videos and channels data
 df = pd.merge(videos_stats, channel_stats, on= "channel_name")
@@ -202,8 +212,128 @@ df = pd.merge(videos_stats, channel_stats, on= "channel_name")
 
 
 
-# ==================Feature engineering=======================
+# ================Text Feature engineering====================
 
+# preparing NLTK data
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('stopwords-hi')
+nltk.download('stopwords-ar')
+nltk.download('averaged_perceptron_tagger')
+
+
+en_stopwords = set(stopwords.words('english')) 
+ar_stopwords = set(stopwords.words('arabic')) 
+# hi_stopwords = set(stopwords.words('hindi')) 
+
+all_stopwords = en_stopwords.union(ar_stopwords)
+
+
+# POS tagging
+def stopwords_dropper(words: list, stopwords: set) -> list:
+    
+    # Removing stop words from unalphabetical chars
+    filtered_words = [re.sub(r"[\W_]", "", word) for word in words
+                      if not word in stopwords]
+    
+    filtered_words = list(filter(lambda item: item != "", filtered_words))
+    return  filtered_words
+
+for col in TEXT_COLUMNS:
+    df[f"{col}_tokens"] = df[col].apply(lambda text: nltk.word_tokenize(text.lower()))
+    df[f"{col}_tokens"] = df[f"{col}_tokens"].apply(lambda text: stopwords_dropper(text,
+                                                                     all_stopwords))
+
+df["title_tokens"]
+
+for col in TEXT_COLUMNS:
+    df[f"{col}_pos_tags"] = df[f"{col}_tokens"].apply(lambda words: nltk.pos_tag(words))
+
+
+# Limmization text
+def get_wordnet_pos(treebank_tag: str) -> str:
+    
+    if treebank_tag.startswith('J'):
+        return wordnet.ADJ
+    
+    elif treebank_tag.startswith('V'):
+        return wordnet.VERB
+    
+    elif treebank_tag.startswith('N'):
+        return wordnet.NOUN
+    
+    elif treebank_tag.startswith('R'):
+        return wordnet.ADV
+    
+    else:
+        return wordnet.NOUN
+
+
+lemmatizer = WordNetLemmatizer()
+lemmatized_words = []
+lemmatized_words_group = []
+
+for col in TEXT_COLUMNS:
+    for index, row in df.iterrows():
+        for token, pos_tag in zip(row[f"{col}_tokens"], row[f"{col}_pos_tags"]):
+
+            wordnet_pos = get_wordnet_pos(pos_tag[1])
+            lemmatized_words_group.append(lemmatizer.lemmatize(token, pos= wordnet_pos))
+            lemmatized_words_group = list(set(lemmatized_words_group)) # Dropping duplicates
+
+
+        lemmatized_words.append(lemmatized_words_group)
+        lemmatized_words_group = [] # clearing this list
+    
+    df[f"{col}_tokens"] = lemmatized_words
+    lemmatized_words = []
+# ============================================================
+
+
+
+# ================Numrical feature engineering================
+
+today = datetime.utcnow().strftime("%Y-%m-%d")
+today = datetime.strptime(today, "%Y-%m-%d")
+
+channel_age = today - pd.to_datetime(df["start_date"])
+df["channel_age_days"] = channel_age.dt.days.astype(int)
+
+video_age = today - pd.to_datetime(df["publishedAt"]).dt.tz_localize(None)
+df["video_age_days"] = video_age.dt.days.astype(np.uint16)
+
+
+
+df["language"] = df["language"].astype("category").cat.codes
+df["definition"] = df["definition"].astype("category").cat.codes
+df["country"] = df["country"].astype("category").cat.codes
+
+cat_cols = ["country", "language", "definition"] # sentimints
+
+
+df["cat_view_count"] = df["cat_view_count"].replace({"from 1 to 3,000": 1, "from 3,000 to 10,000": 2,
+                                                     "from 10,000 to 50,000": 3, "from 50,000 to 100,000": 4,
+                                                     "from 100,000 to 300,000": 5, "more than 300,000": 6})
+
+df["cat_like_count"] = df["cat_like_count"].replace({"from 1 to 1,000": 1, "from 1,000 to 5,000": 2,
+                                                     "from 5,000 to 10,000": 3, "from 10,000 to 50,000": 4,
+                                                     "from 50,000 to 150,000": 5, "more than 150,000": 6})
+
+df["cat_comment_count"] = df["cat_comment_count"].replace({"from 1 to 75": 1, "from 75 to 150": 2,
+                                                           "from 150 to 200": 3, "from 200 to 400": 4,
+                                                           "from 400 to 600": 5, "more than 600": 6})
+
+accounts: list = ["twitter", "facebook", "instagram", "twitch"]
+
+for account in accounts:
+    df[f"have_{account}_account"] = df["about"].str.contains(account)
+
+
+df["start_date"] = pd.to_datetime(df["start_date"])
+
+df["avg_uploads_per_month"] = df["video_count"] / (df["channel_age_days"] // 30)
+df["avg_uploads_per_month"] = df["avg_uploads_per_month"].astype(np.float32)
 # ============================================================
 
 

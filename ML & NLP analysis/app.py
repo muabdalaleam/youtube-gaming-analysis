@@ -2,6 +2,7 @@
 import streamlit as st
 import re
 import tensorflow as tf
+import pytz
 import keras
 import nltk
 import pickle
@@ -17,10 +18,9 @@ from nltk.stem import WordNetLemmatizer
 from googleapiclient.discovery import build
 import googleapiclient.errors
 
-TEXT_COLUMNS = ["title", "description", "channelTitle", "about"]
+TEXT_COLUMNS = ["title", "description", "channel_name", "about"]
 NUMERICS = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64',
             'uint16', 'uint32', 'uint64', float, int]
-
 # ============================================================
 
 
@@ -204,7 +204,7 @@ def get_video_stats(videos_ids: list) -> pd.DataFrame:
 videos_stats = get_video_stats(videos_ids)
 
 channel_stats.drop(["playlist_id"], axis= 1, inplace= True)
-videos_stats = videos_stats.rename({"channelTitle": "channel_name"})
+videos_stats = videos_stats.rename({"channelTitle": "channel_name"}, axis= 1)
 
 # Concating the videos and channels data
 df = pd.merge(videos_stats, channel_stats, on= "channel_name")
@@ -229,8 +229,8 @@ ar_stopwords = set(stopwords.words('arabic'))
 
 all_stopwords = en_stopwords.union(ar_stopwords)
 
-# POS tagging
 
+# POS tagging
 def stopwords_dropper(words: list, stopwords: set) -> list:
     
     # Removing stop words from unalphabetical chars
@@ -241,11 +241,17 @@ def stopwords_dropper(words: list, stopwords: set) -> list:
     return  filtered_words
 
 for col in TEXT_COLUMNS:
+    df[f"{col}_tokens"] = df[col].apply(lambda text: nltk.word_tokenize(text.lower()))
+    df[f"{col}_tokens"] = df[f"{col}_tokens"].apply(lambda text: stopwords_dropper(text,
+                                                                     all_stopwords))
+
+df["title_tokens"]
+
+for col in TEXT_COLUMNS:
     df[f"{col}_pos_tags"] = df[f"{col}_tokens"].apply(lambda words: nltk.pos_tag(words))
 
 
 # Limmization text
-
 def get_wordnet_pos(treebank_tag: str) -> str:
     
     if treebank_tag.startswith('J'):
@@ -287,6 +293,7 @@ for col in TEXT_COLUMNS:
 
 
 # ================Numrical feature engineering================
+
 today = datetime.utcnow().strftime("%Y-%m-%d")
 today = datetime.strptime(today, "%Y-%m-%d")
 
@@ -295,6 +302,7 @@ df["channel_age_days"] = channel_age.dt.days.astype(int)
 
 video_age = today - pd.to_datetime(df["publishedAt"]).dt.tz_localize(None)
 df["video_age_days"] = video_age.dt.days.astype(np.uint16)
+
 
 
 df["language"] = df["language"].astype("category").cat.codes
