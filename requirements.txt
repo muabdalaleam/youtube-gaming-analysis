@@ -8,6 +8,7 @@ requests
 apache-airflow
 matplotlib
 tensorflow
+pandasql
 pytube
 pandas
 statsmodels

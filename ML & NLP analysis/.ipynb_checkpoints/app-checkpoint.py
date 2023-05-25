@@ -5,6 +5,7 @@ import keras
 import pickle
 import pandas as pd
 import numpy as np
+import pandasql as ps
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 from googleapiclient.discovery import build
@@ -61,7 +62,9 @@ def local_css(file_name):
         
 local_css("style.css")
 
-channel_name = st.text_input("Input your **YouTube :red[Channel]** name: ", "AboFlah")
+st.header("Enter the following inputs:")
+
+channel_name = st.text_input("Input your **YouTube :red[Channel]** name: ", "Ali Abdaal")
 
 video_title = st.text_input(
     "Enter the title of the **:red[Video] name** name you want to create: ")
@@ -119,27 +122,30 @@ channel_stats = pd.DataFrame({"channel_name": item["snippet"]["title"],
 
 
 # Loading 50 videos from the channel
-max_results = [50]
-    
-def get_videos_stats(playlist_id):
+def get_videos_ids(playlist_id, max_results = [50]):
 
-    # nonlocal max_results
+    videos_ids = []
     
     videos_ids_request = youtube.playlistItems().list(
         part= "snippet,contentDetails",
         playlistId= playlist_id,
         maxResults= max_results[0])
 
-    try:
-        videos_ids_response = videos_ids_request.execute()
-        videos_ids = videos_ids_response["contentDetails"]["videoId"]
-
-    except:
-        max_results[0] = channel_stats["video_count"][0]
-        get_videos_stats(playlist_id)
+    if max_results[0] <= int(channel_stats["video_count"][0]):
         
-    
-videos_ids = get_videos_stats(channel_stats["playlist_id"][0])
+        videos_ids_response = videos_ids_request.execute()
+        # print(JSON(videos_ids_response))
+        
+        for response in videos_ids_response["items"]:
+            videos_ids.append(response["contentDetails"]["videoId"])
+
+    else:
+        max_results[0] -= int(channel_stats["video_count"][0])
+        videos_ids = get_videos_stats(playlist_id, max_results[0])
+        
+    return  videos_ids
+
+videos_ids = get_videos_ids(channel_stats["playlist_id"][0])
 
 
 # Loading the videos stats
@@ -156,18 +162,13 @@ def get_video_stats(videos_ids: list) -> pd.DataFrame:
     for i in range(0, videos_count, 50):
         
         chunk = videos_ids[i:i+50]
-        processed_videos_count = i + len(chunk)
         
         # Giving the request for each 50 video in one time
         request = youtube.videos().list(
             part="snippet,contentDetails,statistics",
             id=','.join(chunk))
         response = request.execute()
-        
-        # Calculate the progress with updating it.
-        print(f"Finished {processed_videos_count / videos_count * 100:.2f}% of loading the videos data")
-        clear_output(wait= True)
-        time.sleep(0.00001)
+
 
         for video in response['items']:
             video_json_encoder = {"snippet": ['channelTitle', 'title', 'description', 'tags', 'publishedAt'],
@@ -191,6 +192,12 @@ def get_video_stats(videos_ids: list) -> pd.DataFrame:
     return df
 
 videos_stats = get_video_stats(videos_ids)
+
+channel_stats.drop(["playlist_id"], axis= 1, inplace= True)
+videos_stats = videos_stats.rename({"channelTitle": "channel_name"})
+
+# Concating the videos and channels data
+df = pd.merge(videos_stats, channel_stats, on= "channel_name")
 # ============================================================
 
 
@@ -201,9 +208,9 @@ videos_stats = get_video_stats(videos_ids)
 
 
 
-# ====================Updatibg the output=====================
+# ====================Updating the output=====================
 
-st.text_box(channel_id)
+st.text(channel_id)
 # ============================================================
 option = st.selectbox(
     'How would you like to be contacted?',
