@@ -1,5 +1,6 @@
 # ==================Import the packeges=======================
 import streamlit as st
+import re
 import tensorflow as tf
 import keras
 import nltk
@@ -211,7 +212,7 @@ df = pd.merge(videos_stats, channel_stats, on= "channel_name")
 
 
 
-# ==================Feature engineering=======================
+# ================Text Feature engineering====================
 
 # preparing NLTK data
 nltk.download('punkt')
@@ -281,8 +282,50 @@ for col in TEXT_COLUMNS:
     
     df[f"{col}_tokens"] = lemmatized_words
     lemmatized_words = []
+# ============================================================
 
 
+
+# ================Numrical feature engineering================
+today = datetime.utcnow().strftime("%Y-%m-%d")
+today = datetime.strptime(today, "%Y-%m-%d")
+
+channel_age = today - pd.to_datetime(df["start_date"])
+df["channel_age_days"] = channel_age.dt.days.astype(int)
+
+video_age = today - pd.to_datetime(df["publishedAt"]).dt.tz_localize(None)
+df["video_age_days"] = video_age.dt.days.astype(np.uint16)
+
+
+df["language"] = df["language"].astype("category").cat.codes
+df["definition"] = df["definition"].astype("category").cat.codes
+df["country"] = df["country"].astype("category").cat.codes
+
+cat_cols = ["country", "language", "definition"] # sentimints
+
+
+df["cat_view_count"] = df["cat_view_count"].replace({"from 1 to 3,000": 1, "from 3,000 to 10,000": 2,
+                                                     "from 10,000 to 50,000": 3, "from 50,000 to 100,000": 4,
+                                                     "from 100,000 to 300,000": 5, "more than 300,000": 6})
+
+df["cat_like_count"] = df["cat_like_count"].replace({"from 1 to 1,000": 1, "from 1,000 to 5,000": 2,
+                                                     "from 5,000 to 10,000": 3, "from 10,000 to 50,000": 4,
+                                                     "from 50,000 to 150,000": 5, "more than 150,000": 6})
+
+df["cat_comment_count"] = df["cat_comment_count"].replace({"from 1 to 75": 1, "from 75 to 150": 2,
+                                                           "from 150 to 200": 3, "from 200 to 400": 4,
+                                                           "from 400 to 600": 5, "more than 600": 6})
+
+accounts: list = ["twitter", "facebook", "instagram", "twitch"]
+
+for account in accounts:
+    df[f"have_{account}_account"] = df["about"].str.contains(account)
+
+
+df["start_date"] = pd.to_datetime(df["start_date"])
+
+df["avg_uploads_per_month"] = df["video_count"] / (df["channel_age_days"] // 30)
+df["avg_uploads_per_month"] = df["avg_uploads_per_month"].astype(np.float32)
 # ============================================================
 
 
