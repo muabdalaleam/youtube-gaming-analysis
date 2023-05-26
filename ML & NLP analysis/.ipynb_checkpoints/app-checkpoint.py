@@ -3,6 +3,8 @@ import streamlit as st
 import io
 import re
 import tensorflow as tf
+import inspect
+import shutil
 import pytz
 import keras
 import nltk
@@ -105,21 +107,25 @@ subpage = option_menu(
     })
 
 
+def retrieve_name(var):
+    callers_local_vars = inspect.currentframe().f_back.f_locals.items()
+    return [var_name for var_name, var_val in callers_local_vars if var_val is var]
 
-if subpage == "Taking required inputs":
-    
+inputs = ["channel_name", "video_title", "video_description",
+          "duration_in_minutes", "duration_in_seconds", "thumbnail",
+          "video_tags"]
+
+def inputs_page():
+        
     st.header("Enter the following inputs:")
 
     channel_name = st.text_input("Input your **YouTube :red[Channel]** name: ", "Ali Abdaal")
-    buffer.write(channel_name.encode())
     
     video_title = st.text_input(
         "Enter the title of the **:red[Video] name** name you want to create: ")
-    buffer.write(video_title.encode())
     
     video_description = st.text_input(
-        "Enter the description of the **:red[Video]** you want to create: ")    
-    buffer.write(video_description.encode())
+        "Enter the description of the **:red[Video]** you want to create: ")
     
     video_definition = st.selectbox(
         "What's the **:red[Definition]** of the video you will create: ",
@@ -127,8 +133,7 @@ if subpage == "Taking required inputs":
     
     for old, new in {"High definition": "hd", "Standard definition": "sd"}.items():
         video_definition = video_definition.replace(old, new)
-    buffer.write(video_definition.encode())
-    
+        
     duration_in_minutes = st.text_input(
         "Enter Your **Video Duration in :red[Minutes]:**", 0)
 
@@ -145,7 +150,25 @@ if subpage == "Taking required inputs":
     
     video_tags = st.text_input("What are the **:red[Tags]** of your video" + \
     "(Input them as words between square brackets [] & separated by commas): ")
+    
+    # We have to store all varibels in each 'if' scope as temp files so we can acces them
+    # outside this 'if' scope.
+    
+    for input_ in inputs:
+        
+        with open(f"temp/{input_}", "wb") as f:
+            pickle.dump(input_, f)
+    
 
+if subpage == "Taking required inputs":
+    
+    inputs_page()
+
+for input_ in inputs:
+    with open(f"temp/{input_}", "rb") as f:
+        
+        variable_name = input_
+        globals()[variable_name] = pickle.load(f)
 # ============================================================
 
 
@@ -450,4 +473,7 @@ if subpage == "Recommendations for your channel":
     st.plotly_chart(total_subs_vs_start_date, theme= None)
     st.plotly_chart(duration_vs_views, theme= None)
     st.plotly_chart(video_stats_per_game, theme= None)
+    
+    
+    print(channel_name)
 # ============================================================
