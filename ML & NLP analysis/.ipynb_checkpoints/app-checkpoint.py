@@ -131,6 +131,12 @@ channel_stats = pd.DataFrame({"channel_name": item["snippet"]["title"],
                               "about": item["snippet"]["description"]}
                               , index=[0])
 
+if not "country" in item["snippet"]:
+    channel_stats["country"] = np.nan
+
+else:
+    channel_stats["country"] = item["snippet"]["country"]
+
 
 # Loading 50 videos from the channel
 def get_videos_ids(playlist_id, max_results = [50]):
@@ -233,7 +239,6 @@ all_stopwords = en_stopwords.union(ar_stopwords)
 # POS tagging
 def stopwords_dropper(words: list, stopwords: set) -> list:
     
-    # Removing stop words from unalphabetical chars
     filtered_words = [re.sub(r"[\W_]", "", word) for word in words
                       if not word in stopwords]
     
@@ -294,10 +299,36 @@ for col in TEXT_COLUMNS:
 
 # ================Numrical feature engineering================
 
+country_languages = {
+    'DE': 'German',
+    'US': 'English', 'PL': 'Polish',
+    'SA': 'Arabic', 'NP': 'Nepali',
+    'CA': 'English', 'ES': 'Spanish',
+    'TR': 'Turkish', 'IN': 'Hindi',
+    'EG': 'Arabic', 'GB': 'English',
+    'MX': 'Spanish', 'BR': 'Portuguese',
+    'PK': 'Urdu', 'FR': 'French',
+    'VN': 'Vietnamese', 'ID': 'Indonesian',
+    'AU': 'English', 'HU': 'Hungarian',
+    'NL': 'Dutch', 'BG': 'Bulgarian',
+    'JP': 'Japanese', 'SG': 'English', 
+    'TH': 'Thai', 'PH': 'Tagalog',
+    'MT': 'Maltese', 'PE': 'Spanish',
+    'SE': 'Swedish', 'IT': 'Italian',
+    'KR': 'Korean', 'TW': 'Chinese',
+    'FI': 'Finnish', 'DZ': 'Arabic',
+    'BD': 'Bengali', 'AR': 'Spanish'}
+
+df["language"] = df["country"].replace(country_languages)
+
+df = df.astype({"commentCount": np.uint16, "viewCount": np.uint32,
+                "likeCount": np.uint32, "subscribers": np.uint32,
+                "video_count": np.uint16})
+
 today = datetime.utcnow().strftime("%Y-%m-%d")
 today = datetime.strptime(today, "%Y-%m-%d")
 
-channel_age = today - pd.to_datetime(df["start_date"])
+channel_age = today - pd.to_datetime(df["start_date"]).apply(lambda x: x.tz_localize(None))
 df["channel_age_days"] = channel_age.dt.days.astype(int)
 
 video_age = today - pd.to_datetime(df["publishedAt"]).dt.tz_localize(None)
@@ -310,6 +341,25 @@ df["definition"] = df["definition"].astype("category").cat.codes
 df["country"] = df["country"].astype("category").cat.codes
 
 cat_cols = ["country", "language", "definition"] # sentimints
+
+
+df["cat_view_count"] = pd.cut(df['viewCount'],
+                         bins=[0, 3_000, 10_000, 50_000, 100_000, 300_000, 999_999_999_999],
+                         labels=["from 1 to 3,000", "from 3,000 to 10,000",
+                                 "from 10,000 to 50,000", "from 50,000 to 100,000",
+                                 "from 100,000 to 300,000", "more than 300,000"])
+
+df["cat_comment_count"] = pd.cut(df['commentCount'],
+                         bins=[0, 75, 150, 200, 400, 600, 999_999_999_999],
+                         labels=["from 1 to 75", "from 75 to 150",
+                                 "from 150 to 200", "from 200 to 400",
+                                 "from 400 to 600", "more than 600"])
+
+df["cat_like_count"] = pd.cut(df['likeCount'],
+                         bins=[0, 1_000, 5_000, 10_000, 50_000, 150_000, 999_999_999_999],
+                         labels=["from 1 to 1,000", "from 1,000 to 5,000",
+                                 "from 5,000 to 10,000", "from 10,000 to 50,000",
+                                 "from 50,000 to 150,000", "more than 150,000"])
 
 
 df["cat_view_count"] = df["cat_view_count"].replace({"from 1 to 3,000": 1, "from 3,000 to 10,000": 2,
