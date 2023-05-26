@@ -1,5 +1,6 @@
 # ==================Import the packeges=======================
 import streamlit as st
+import io
 import re
 import tensorflow as tf
 import pytz
@@ -24,6 +25,7 @@ import googleapiclient.errors
 TEXT_COLUMNS = ["title", "description", "channel_name", "about"]
 NUMERICS = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64',
             'uint16', 'uint32', 'uint64', float, int]
+buffer = io.BytesIO()
 # ============================================================
 
 
@@ -103,20 +105,21 @@ subpage = option_menu(
     })
 
 
-channel_name = st.text_input("Input your **YouTube :red[Channel]** name: ", "Ali Abdaal")
-    
+
 if subpage == "Taking required inputs":
     
     st.header("Enter the following inputs:")
 
+    channel_name = st.text_input("Input your **YouTube :red[Channel]** name: ", "Ali Abdaal")
+    buffer.write(channel_name.encode())
     
     video_title = st.text_input(
         "Enter the title of the **:red[Video] name** name you want to create: ")
-    
+    buffer.write(video_title.encode())
     
     video_description = st.text_input(
-        "Enter the description of the **:red[Video]** you want to create: ")
-    
+        "Enter the description of the **:red[Video]** you want to create: ")    
+    buffer.write(video_description.encode())
     
     video_definition = st.selectbox(
         "What's the **:red[Definition]** of the video you will create: ",
@@ -124,8 +127,8 @@ if subpage == "Taking required inputs":
     
     for old, new in {"High definition": "hd", "Standard definition": "sd"}.items():
         video_definition = video_definition.replace(old, new)
-        
-
+    buffer.write(video_definition.encode())
+    
     duration_in_minutes = st.text_input(
         "Enter Your **Video Duration in :red[Minutes]:**", 0)
 
@@ -136,8 +139,7 @@ if subpage == "Taking required inputs":
 
     except:
         st.error("Enter duration as integer.")
-
-        
+    
     thumbnail = st.file_uploader("Upload or drag & drop your **Video :red[Thumbnail]** image: ")
     
     
@@ -442,10 +444,10 @@ df["avg_uploads_per_month"] = df["avg_uploads_per_month"].astype(np.float32)
 
 if subpage == "Recommendations for your channel":
 
-    st.plotly_chart(subs_vs_channel_name_len)
-    st.plotly_chart(social_accounts_affect_on_vid_stats)
-    st.plotly_chart(video_stats_per_game)
-    st.plotly_chart(total_subs_vs_start_date)
-    st.plotly_chart(duration_vs_views)
-    st.plotly_chart(video_stats_per_game)
+    st.plotly_chart(subs_vs_channel_name_len, theme= None)
+    st.plotly_chart(social_accounts_affect_on_vid_stats, theme= None)
+    st.plotly_chart(video_stats_per_game, theme= None)
+    st.plotly_chart(total_subs_vs_start_date, theme= None)
+    st.plotly_chart(duration_vs_views, theme= None)
+    st.plotly_chart(video_stats_per_game, theme= None)
 # ============================================================
