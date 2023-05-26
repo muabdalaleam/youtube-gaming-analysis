@@ -5,8 +5,10 @@ import tensorflow as tf
 import pytz
 import keras
 import nltk
+import plotly.io as pio
 import pickle
 import pandas as pd
+import plotly.express as px
 import numpy as np
 import pandasql as ps
 import google_auth_oauthlib.flow
@@ -16,6 +18,7 @@ from datetime import datetime
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from googleapiclient.discovery import build
+from streamlit_option_menu import option_menu
 import googleapiclient.errors
 
 TEXT_COLUMNS = ["title", "description", "channel_name", "about"]
@@ -33,11 +36,13 @@ API_VERSION = "v3"
 
 youtube = build(
     API_SERVICE_NAME, API_VERSION, developerKey= API_KEY)
+
+st.set_page_config(layout="wide")
 # ============================================================
 
 
 
-# ===========Loading the models & preprocessors===============
+# ========Loading the models, preprocessor & graphs===========
 features_labels =  {"X_train_labels": None,
                    "X_test_labels": None,
                    "y_train_labels": None,
@@ -61,11 +66,18 @@ for model_name, model in models.items():
 for processor_name, processor in preprocessors.items():
     with open(f"preprocessors/{processor_name}.pickle", "rb") as f:
         processor = pickle.load(f)
+        
+        
+subs_vs_channel_name_len = pio.read_json("../Data analysis/plots/json/subs_vs_channel_name_len_line_chart.json")
+social_accounts_affect_on_vid_stats = pio.read_json("../Data analysis/plots/json/social_accounts_affect_on_vid_stats.json")
+video_stats_per_game = pio.read_json('../Data analysis/plots/json/video_stats_per_game.json')
+total_subs_vs_start_date = pio.read_json("../Data analysis/plots/json/total_subs_for_channels_per_start_date.json")
+duration_vs_views = pio.read_json("../Data analysis/plots/json/desc_len_vs_views_scatter_plot.json")
 # ============================================================
 
 
 
-# ==================Getting user interacts====================
+# ==================Getting user inputs=======================
 def local_css(file_name):
     
     with open(file_name) as f:
@@ -73,31 +85,65 @@ def local_css(file_name):
         
 local_css("style.css")
 
-st.header("Enter the following inputs:")
+st.markdown("<h1 style='text-align: center;'>" + \
+            "Youtube gaming analysis AI app</h1>", unsafe_allow_html=True)
+
+subpage = option_menu(
+    menu_title= "Main menu",
+    options= ["Taking required inputs", "Your Video Predictions",
+               "Recommendations for your channel"],
+    icons= ["youtube", "magic", "graph-up-arrow"],
+    menu_icon= "house",
+    default_index= 0,
+    styles={
+    "container": {"background-color": "#0f0f0f"},
+    "icon": {"color": "0f0f0f", "font-size": "15px"}, 
+    "nav-link": {"font-size": "18px", "text-align": "left", "margin":"0px", "--hover-color": "#9e9e9e"},
+    "nav-link-selected": {"background-color": "red"}
+    })
+
 
 channel_name = st.text_input("Input your **YouTube :red[Channel]** name: ", "Ali Abdaal")
-
-video_title = st.text_input(
-    "Enter the title of the **:red[Video] name** name you want to create: ")
-
-duration_in_minutes = st.text_input(
-    "Enter Your **Video Duration in :red[Minutes]:**", 0)
-
-try:
-    duration_in_seconds = int(st.text_input(
-        "(Optional) Enter Your **Video Duration in :red[Seconds]:**",
-        int(duration_in_minutes) * 60))
     
-except:
-    st.error("Enter duration as integer.")
+if subpage == "Taking required inputs":
+    
+    st.header("Enter the following inputs:")
 
-thumbnail = st.file_uploader("Upload or drag & drop your **Video :red[Thumbnail]** image: ")
+    
+    video_title = st.text_input(
+        "Enter the title of the **:red[Video] name** name you want to create: ")
+    
+    
+    video_description = st.text_input(
+        "Enter the description of the **:red[Video]** you want to create: ")
+    
+    
+    video_definition = st.selectbox(
+        "What's the **:red[Definition]** of the video you will create: ",
+        ('High definition', 'Standard definition'))
+    
+    for old, new in {"High definition": "hd", "Standard definition": "sd"}.items():
+        video_definition = video_definition.replace(old, new)
+        
 
+    duration_in_minutes = st.text_input(
+        "Enter Your **Video Duration in :red[Minutes]:**", 0)
 
-with st.sidebar:
-    add_radio = st.radio(
-        "Choose a shipping method",
-        ("Standard (5-15 days)", "Express (2-5 days)"))
+    try:
+        duration_in_seconds = int(st.text_input(
+            "(Optional) Enter Your **Video Duration in :red[Seconds]:**",
+            int(duration_in_minutes) * 60))
+
+    except:
+        st.error("Enter duration as integer.")
+
+        
+    thumbnail = st.file_uploader("Upload or drag & drop your **Video :red[Thumbnail]** image: ")
+    
+    
+    video_tags = st.text_input("What are the **:red[Tags]** of your video" + \
+    "(Input them as words between square brackets [] & separated by commas): ")
+
 # ============================================================
 
 
@@ -388,14 +434,18 @@ df["avg_uploads_per_month"] = df["avg_uploads_per_month"].astype(np.float32)
 
 
 
-# ====================Updating the output=====================
+# =================Predicting the video success===============
 
-st.text(channel_id)
 # ============================================================
-option = st.selectbox(
-    'How would you like to be contacted?',
-    ('Email', 'Home phone', 'Mobile phone'))
 
-st.write('You selected:', option)
+# ===============Plotting channel statistics==================
 
-print(channel_id)
+if subpage == "Recommendations for your channel":
+
+    st.plotly_chart(subs_vs_channel_name_len)
+    st.plotly_chart(social_accounts_affect_on_vid_stats)
+    st.plotly_chart(video_stats_per_game)
+    st.plotly_chart(total_subs_vs_start_date)
+    st.plotly_chart(duration_vs_views)
+    st.plotly_chart(video_stats_per_game)
+# ============================================================

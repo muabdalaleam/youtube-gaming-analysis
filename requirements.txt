@@ -13,6 +13,7 @@ pytube
 pandas
 statsmodels
 protobuf
+streamlit-option-menu
 keras
 huggingface_hub
 mord

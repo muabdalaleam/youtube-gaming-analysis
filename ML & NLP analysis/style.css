@@ -9,3 +9,13 @@ body {
 /*     position: relative;
     bottom: 50px; */
 }
+
+
+div[data-baseweb="select"] > div {
+    color: #0f0f0f;
+}
+
+/* 
+.file_input span.css-1y4s9kj, .file_input span.css-gohu2u, .file_input span.css-dv0z3m {
+        color: red !important;
+    } */

@@ -189,7 +189,7 @@ showPyplotGlobalUse = true
 base = "dark"
 
 # Primary accent color for interactive elements.
-# primaryColor =
+primaryColor = "#ff0303"
 
 # Background color for the main content area.
 backgroundColor = "#0f0f0f"
@@ -198,7 +198,7 @@ backgroundColor = "#0f0f0f"
 secondaryBackgroundColor = "#d9d9d9"
 
 # Color used for almost all text.
-# textColor = 
+# textColor = "#ff0303"
 
 # Font family for all text in the app, except code blocks. One of "sans serif", "serif", or "monospace".
-font = 'monospace'
+font = 'sans serif'
