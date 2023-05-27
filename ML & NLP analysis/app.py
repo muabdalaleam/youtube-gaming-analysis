@@ -8,6 +8,7 @@ import shutil
 import pytz
 import keras
 import nltk
+import emoji
 import plotly.io as pio
 import pickle
 import pandas as pd
@@ -19,7 +20,9 @@ import googleapiclient.discovery
 from nltk.corpus import wordnet
 from datetime import datetime
 from nltk.corpus import stopwords
+import datetime as dt
 from nltk.stem import WordNetLemmatizer
+from sklearn.model_selection import train_test_split
 from googleapiclient.discovery import build
 from streamlit_option_menu import option_menu
 import googleapiclient.errors
@@ -41,7 +44,8 @@ API_VERSION = "v3"
 youtube = build(
     API_SERVICE_NAME, API_VERSION, developerKey= API_KEY)
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title='Youtube gaming analysis ML app.',
+                        page_icon = '../imgs/logo.png')
 # ============================================================
 
 
@@ -113,10 +117,10 @@ def retrieve_name(var):
 
 inputs = ["channel_name", "video_title", "video_description",
           "duration_in_minutes", "duration_in_seconds", "thumbnail",
-          "video_tags"]
+          "video_tags", "publish_day"]
 
-def inputs_page():
-        
+if subpage == "Taking required inputs":
+    
     st.header("Enter the following inputs:")
 
     channel_name = st.text_input("Input your **YouTube :red[Channel]** name: ", "Ali Abdaal")
@@ -131,14 +135,17 @@ def inputs_page():
         "What's the **:red[Definition]** of the video you will create: ",
         ('High definition', 'Standard definition'))
     
+    publish_day = st.date_input(label='Choose the **:red[Date]** you will upload the video in:',
+              value= dt.date(year=2022, month=5, day=20))
+    
     for old, new in {"High definition": "hd", "Standard definition": "sd"}.items():
         video_definition = video_definition.replace(old, new)
         
-    duration_in_minutes = st.text_input(
+    duration_in_minutes = st.number_input(
         "Enter Your **Video Duration in :red[Minutes]:**", 0)
 
     try:
-        duration_in_seconds = int(st.text_input(
+        duration_in_seconds = int(st.number_input(
             "(Optional) Enter Your **Video Duration in :red[Seconds]:**",
             int(duration_in_minutes) * 60))
 
@@ -157,13 +164,9 @@ def inputs_page():
     for input_ in inputs:
         
         with open(f"temp/{input_}", "wb") as f:
-            pickle.dump(input_, f)
-    
+            pickle.dump(globals()[input_], f)
 
-if subpage == "Taking required inputs":
     
-    inputs_page()
-
 for input_ in inputs:
     with open(f"temp/{input_}", "rb") as f:
         
@@ -228,8 +231,8 @@ def get_videos_ids(playlist_id, max_results = [50]):
             videos_ids.append(response["contentDetails"]["videoId"])
 
     else:
-        max_results[0] -= int(channel_stats["video_count"][0])
-        videos_ids = get_videos_ids(playlist_id, max_results[0])
+        max_results[0] -= int(channel_stats["video_count"])
+        videos_ids = get_videos_ids(playlist_id, max_results)
         
     return  videos_ids
 
@@ -321,7 +324,7 @@ for col in TEXT_COLUMNS:
     df[f"{col}_tokens"] = df[f"{col}_tokens"].apply(lambda text: stopwords_dropper(text,
                                                                      all_stopwords))
 
-df["title_tokens"]
+# df["title_tokens"]
 
 for col in TEXT_COLUMNS:
     df[f"{col}_pos_tags"] = df[f"{col}_tokens"].apply(lambda words: nltk.pos_tag(words))
@@ -370,6 +373,32 @@ for col in TEXT_COLUMNS:
 
 # ================Numrical feature engineering================
 
+# Extracting emojies count
+
+comments_emojis_counts: list = []
+title_emojis_counts: list = []
+desc_emojis_counts: list = []
+
+for title, desc in zip(df["title"], df["description"]):
+    
+    title_emojis_count: int = 0
+    desc_emojis_count: int = 0
+    
+    for title_char, desc_char in zip(title, desc):
+        
+            
+        if emoji.is_emoji(title_char):
+            title_emojis_count += 1
+            
+        if emoji.is_emoji(desc_char):
+            desc_emojis_count += 1
+    
+    title_emojis_counts.append(title_emojis_count)
+    desc_emojis_counts.append(desc_emojis_count)
+    
+df["title_length"] = df["title"].str.len()
+df["channel_name_length"] = df["channel_name"].str.len()
+
 country_languages = {
     'DE': 'German',
     'US': 'English', 'PL': 'Polish',
@@ -404,7 +433,6 @@ df["channel_age_days"] = channel_age.dt.days.astype(int)
 
 video_age = today - pd.to_datetime(df["publishedAt"]).dt.tz_localize(None)
 df["video_age_days"] = video_age.dt.days.astype(np.uint16)
-
 
 
 df["language"] = df["language"].astype("category").cat.codes
@@ -455,13 +483,66 @@ df["start_date"] = pd.to_datetime(df["start_date"])
 
 df["avg_uploads_per_month"] = df["video_count"] / (df["channel_age_days"] // 30)
 df["avg_uploads_per_month"] = df["avg_uploads_per_month"].astype(np.float32)
+
+
+# Now we will set the inputs as columns:
+st.text(duration_in_seconds)
+
+df["duration_in_minutes"] = float(duration_in_seconds) / 60
+df["publishedAt"] = publish_day
+# df["tags"] = 
+
+for column in TEXT_COLUMNS:
+    df[column] = df["title"].str.len()
+df["title_length"] = df["title"].str.len()
+df["channel_name_length"] = df["channel_name"].str.len()
 # ============================================================
 
 
 
 # =================Predicting the video success===============
 
+# Preparing training & testing data
+if subpage == "Your Video Predictions":
+
+    df = df.astype({"total_views": np.uint64, "video_count": np.uint16,
+                    "duration_in_minutes": np.float32, "start_date": "datetime64[ns]",
+                    "publishedAt": "datetime64[ns]"})
+
+
+    text_cols = ["tags", "about_tokens", "title_tokens",
+                 "channel_name_tokens", "description_tokens"]
+
+    features_to_drop = ["viewCount",
+                        "likeCount",
+                        "commentCount"]
+
+    numeric_cols = [e for e in [*df.select_dtypes(NUMERICS).columns] if e not in features_to_drop]
+
+    target_cols = ["cat_view_count", "cat_like_count", "cat_comment_count"]
+
+
+    cat_cols = [e for e in [*df.select_dtypes(["category", "bool"]).columns] if e not in target_cols]
+
+
+    X = df[numeric_cols + cat_cols + text_cols]
+    y = df[target_cols]
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 1/5)
+
+    del X, y
+
+    X_train_labels = {index: value for index, value in enumerate(X_train.columns)}
+    X_test_labels = {index: value for index, value in enumerate(X_test.columns)}
+
+    y_train_labels = {index: value for index, value in enumerate(y_train.columns)}
+    y_test_labels = {index: value for index, value in enumerate(y_test.columns)}
+
+
+    st.text(X_train_labels)
 # ============================================================
+
+
 
 # ===============Plotting channel statistics==================
 
