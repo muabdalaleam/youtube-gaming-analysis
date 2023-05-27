@@ -8,7 +8,6 @@ import shutil
 import pytz
 import keras
 import nltk
-import emoji
 import plotly.io as pio
 import pickle
 import pandas as pd
@@ -172,6 +171,7 @@ for input_ in inputs:
         
         variable_name = input_
         globals()[variable_name] = pickle.load(f)
+        
 # ============================================================
 
 
@@ -374,8 +374,22 @@ for col in TEXT_COLUMNS:
 # ================Numrical feature engineering================
 
 # Extracting emojies count
+def check_emoji(text) -> bool:
+    emoji_regex = re.compile("[\U0001F600-\U0001F64F"
+                            "\U0001F300-\U0001F5FF"
+                            "\U0001F680-\U0001F6FF"
+                            "\U0001F1E0-\U0001F1FF"
+                            "\U00002600-\U000027BF"
+                            "\U0001F900-\U0001F9FF"
+                            "\U0001F100-\U0001F1FF"
+                            "\U0001F600-\U0001F64F"
+                            "\U00002702-\U000027B0"
+                            "\U000024C2-\U0001F251"
+                            "\U0001F600-\U0001F6FF]+", flags=re.UNICODE)
+    is_emoji = bool(emoji_regex.findall(text))
+    return  is_emoji
 
-comments_emojis_counts: list = []
+
 title_emojis_counts: list = []
 desc_emojis_counts: list = []
 
@@ -387,17 +401,19 @@ for title, desc in zip(df["title"], df["description"]):
     for title_char, desc_char in zip(title, desc):
         
             
-        if emoji.is_emoji(title_char):
+        if check_emoji(title_char):
             title_emojis_count += 1
             
-        if emoji.is_emoji(desc_char):
+        if check_emoji(desc_char):
             desc_emojis_count += 1
     
     title_emojis_counts.append(title_emojis_count)
     desc_emojis_counts.append(desc_emojis_count)
     
-df["title_length"] = df["title"].str.len()
-df["channel_name_length"] = df["channel_name"].str.len()
+df["title_emojis_count"] = title_emojis_counts
+df["desc_emojis_count"] = desc_emojis_counts
+
+
 
 country_languages = {
     'DE': 'German',
@@ -493,9 +509,8 @@ df["publishedAt"] = publish_day
 # df["tags"] = 
 
 for column in TEXT_COLUMNS:
-    df[column] = df["title"].str.len()
-df["title_length"] = df["title"].str.len()
-df["channel_name_length"] = df["channel_name"].str.len()
+    df[f"{column}_length"] = df[column].str.len()
+    
 # ============================================================
 
 
@@ -540,6 +555,8 @@ if subpage == "Your Video Predictions":
 
 
     st.text(X_train_labels)
+    
+
 # ============================================================
 
 
