@@ -557,6 +557,52 @@ if subpage == "Your Video Predictions":
     st.text(X_train_labels)
     
 
+# Stacking text features sparse matrix:
+scaler = preprocessors["Scaler"]
+encoder = preprocessors["Encoder"]
+vectorizer = preprocessors["Vectorizer"]
+pca = preprocessors["PCA"]
+
+for X in X_train, X_test:
+            
+    for col in X[text_cols].columns:
+        X[col] = X[col].astype(str)
+        
+    X["stacked_text"] = X[text_cols].agg(', '.join, axis=1).astype(str)
+    X["stacked_text"] = X["stacked_text"].str.replace("[", "")
+    X["stacked_text"] = X["stacked_text"].str.replace("]", "")
+    
+    numeric_cols_arr = scaler.transform(X[numeric_cols])
+    cat_cols_arr = X[cat_cols].to_numpy()
+    text_col_arr = vectorizer.transform(X["stacked_text"]).toarray()
+    other_columns = X[["have_facebook_account", "have_instagram_account",
+                       "have_twitter_account", "have_twitch_account"]]
+    
+    # We will use PCA to compress the text features sparse matrix into less columns
+    # so the train columns equall the test columns.
+    
+    text_cols_max_len = X[text_cols].shape[1]
+    pca = PCA(n_components= text_cols_max_len)
+    
+    
+    if X.shape == X_train.shape:
+        
+        X_train = np.asarray(np.hstack((numeric_cols_arr,
+                    cat_cols_arr, pca.transform(text_col_arr), other_columns)))
+        
+    elif X.shape == X_test.shape:
+        
+        X_test = np.asarray(np.hstack((numeric_cols_arr,
+                    cat_cols_arr, pca.transform(text_col_arr), other_columns)))
+        
+    
+        
+y_test = y_test.to_numpy().astype(int)
+y_train = y_train.to_numpy().astype(int)
+
+y_test -= 1
+y_train -= 1
+
 # ============================================================
 
 
