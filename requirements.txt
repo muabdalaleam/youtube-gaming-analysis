@@ -9,6 +9,7 @@ apache-airflow
 matplotlib
 tensorflow
 pandasql
+Pillow
 pytube
 pandas
 statsmodels
