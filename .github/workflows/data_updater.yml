@@ -1,0 +1,25 @@
+name: Data Updater
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  run-updater:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run games data updater
+        run: python Data engineering\data updater\games_updater.py
+
+      - name: Run videos & channels updater
+        run: python Data engineering\data updater\update.py
