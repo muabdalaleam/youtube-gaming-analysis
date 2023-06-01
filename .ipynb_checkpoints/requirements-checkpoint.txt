@@ -17,7 +17,6 @@ protobuf
 streamlit-option-menu
 keras
 huggingface_hub
-mord
 numpy
 opencv-python
 svgwrite
@@ -25,7 +24,6 @@ gunicorn
 pytz
 wordcloud
 pycode
-emoji
 panel
 IPython
 pylint
@@ -40,5 +38,4 @@ nltk
 scikit-learn
 opencv-python
 scipy
-langdetect
 joblib
