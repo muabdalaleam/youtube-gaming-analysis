@@ -2,9 +2,11 @@ astroid
 streamlit
 google-auth
 google-auth-oauthlib
+jupyterlab
 google-api-python-client
 bs4
 requests
+keras
 apache-airflow
 matplotlib
 tensorflow
