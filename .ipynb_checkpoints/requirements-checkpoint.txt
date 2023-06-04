@@ -10,6 +10,7 @@ keras
 apache-airflow
 matplotlib
 tensorflow
+tensorflow-text
 pandasql
 Pillow
 pytube
