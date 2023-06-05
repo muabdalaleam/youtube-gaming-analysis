@@ -598,7 +598,7 @@ for X in X_train, X_test:
         
 y_test = y_test.to_numpy().astype(int)
 y_train = y_train.to_numpy().astype(int)
-s
+
 y_test -= 1
 y_train -= 1
 
