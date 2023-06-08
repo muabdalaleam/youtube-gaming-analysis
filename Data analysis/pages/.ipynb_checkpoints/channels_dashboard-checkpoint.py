@@ -1,6 +1,7 @@
 # --------------------------Import packeges----------------------
 from dash import html, callback, Input, Output, register_page, dcc
 import dash
+import os
 import plotly.express as px
 import numpy as np
 import pickle
@@ -9,6 +10,10 @@ from datetime import datetime
 import pandas as pd
 
 pio.templates.default = "ggplot2"
+os.chdir(r"C:\Users\Muhammad\Documents\Data science projects\Youtube gaming analysis\Data analysis")
+
+from functions import tucky
+from functions import z_score
 # ---------------------------------------------------------------
 
 
@@ -22,8 +27,8 @@ tags_appendings_per_vid = pio.read_json("plots/json/tags_appendings_per_vid_bar_
 channel_subs_per_country = pio.read_json("plots/json/channels_subs_per_country.json")
 youtubers_with_social_accounts = pio.read_json("plots/json/youtubers_count_with_social_accounts.json")
 
-with open('functions/z-score.pickle', 'rb') as f:
-    z_score = pickle.load(f)
+# with open('functions/z-score.pickle', 'rb') as f:
+#     z_score = pickle.load(f)
 
 THEME_COLORS = ["#2e2e2e", "#fc0303"]
 EXERNAL_STYLESHEETS = ['assets/style.css']

@@ -29,7 +29,7 @@ def create_button(dashboard: str) -> dcc.Link:
              style= {"background-color": THEME_COLORS[0], "padding": "15px 25px",
                      "color": "white", "text-decoration": "none", "position": "relative",
                      'border': '4px solid white', "top": "80px", "border-radius": "25px"})
-    
+
     return  button
 
 
