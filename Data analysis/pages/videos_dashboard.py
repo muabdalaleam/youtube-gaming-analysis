@@ -47,8 +47,9 @@ layout = html.Div(children= [
         id='videos_like_per_country',
         figure= videos_like_per_country.update_layout(width= N_WIDTH, height= N_HEIGHT),
         
-        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
-                'display': 'inline-block', "right" : f"{DISTANCE}px", "bottom": f"{N_HEIGHT + 2}px"},
+        style= {'position': 'relative', 'padding':'5px',
+                'display': 'inline-block', "right" : f"{DISTANCE}px", "bottom": f"{N_HEIGHT + 2}px",
+                'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)'},
         
         config= {'displaylogo': False}),
     
@@ -56,10 +57,11 @@ layout = html.Div(children= [
     dcc.Graph(
         id= 'social_accounts_affect_on_vid_stats',
         figure= social_accounts_affect_on_vid_stats.update_layout(width= N_WIDTH,
-                                                                  height= L_HEIGHT + DISTANCE),
+                                                                  height= L_HEIGHT + (DISTANCE * 2)),
         
-        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
-                'display': 'inline-block', 'left': f'{DISTANCE * 2}px', 'top': f'{DISTANCE * 2}px'},
+        style= {'position': 'relative', 'padding':'5px',
+                'display': 'inline-block', 'left': f'{DISTANCE * 2}px', 'top': f'{DISTANCE * 2}px',
+                'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)'},
         
         config= {'displaylogo': False}),
 
@@ -71,14 +73,14 @@ layout = html.Div(children= [
         
         style= {'position': 'relative', 'display': 'inline-block',
                 'bottom': f'{(N_HEIGHT + 2) - DISTANCE * 2}px', 'right': f'{100 + DISTANCE * 2}px',
-                'border': f'2px solid {THEME_COLORS[0]}'},
+                'padding':'5px', 'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)'},
         
         config= {'displaylogo': False}),
     
     
     html.Div(["*Double click on legend buttons to isolate lines and bars."],
              style= {'position': 'relative', 'height': '20px', 'right': f'{L_WIDTH / 1.7}px',
-                     'bottom': f'{N_HEIGHT - (DISTANCE * 4)}px', 'display': 'inline-block'}),
+                     'bottom': f'{N_HEIGHT - (DISTANCE * 5)}px', 'display': 'inline-block'}),
     
     
     dcc.Graph(
@@ -87,7 +89,8 @@ layout = html.Div(children= [
                                                           height= N_HEIGHT),
     
         style= {'position': 'relative', 'bottom': f'{N_HEIGHT - (4 * DISTANCE)}px',
-                'border': f'2px solid {THEME_COLORS[0]}',
+                'padding':'5px', 'border-radius': '20px',
+                'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                 'display': 'inline-block', 'left': 'hi'},
     
         config= {'displaylogo': False}),
@@ -99,7 +102,8 @@ layout = html.Div(children= [
                                                           height= N_HEIGHT),
     
         style= {'position': 'relative', 'bottom': f'{N_HEIGHT - (DISTANCE * 6)}px',
-                'border': f'2px solid {THEME_COLORS[0]}',
+                'padding':'5px', 'border-radius': '20px',
+                'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                 'display': 'inline-block', 'left': 'hi'},
     
         config= {'displaylogo': False}),
@@ -111,7 +115,8 @@ layout = html.Div(children= [
                                                           height= N_HEIGHT),
     
         style= {'position': 'relative', 'bottom': f'{N_HEIGHT - (DISTANCE * 8)}px',
-                'border': f'2px solid {THEME_COLORS[0]}',
+                'padding':'5px', 'border-radius': '20px',
+                'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                 'display': 'inline-block'},
     
         config= {'displaylogo': False}),

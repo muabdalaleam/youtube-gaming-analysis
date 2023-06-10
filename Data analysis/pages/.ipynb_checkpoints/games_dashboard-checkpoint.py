@@ -1,6 +1,8 @@
 # --------------------------Import packeges----------------------
 from dash import html, callback, Input, Output, register_page, dcc
 import dash
+from functions import tucky_method
+from functions import z_score
 import plotly.graph_objects as go
 from scipy import interpolate
 import plotly.express as px
@@ -9,11 +11,13 @@ import pytz
 import pickle
 import plotly.io as pio
 from scipy import stats
+import os
 import ast
 from datetime import datetime
 import pandas as pd
 
 pio.templates.default = "ggplot2"
+os.chdir(r"C:\Users\Muhammad\Documents\Data science projects\Youtube gaming analysis\Data analysis")
 # ---------------------------------------------------------------
 
 
@@ -31,12 +35,6 @@ TODAY = datetime.now().strftime("%Y-%m-%d")
 TODAY = pytz.utc.localize(datetime.strptime(TODAY, "%Y-%m-%d"))
 
 GAMES = [*base_games["game"].unique()]
-
-with open('functions/tucky.pickle', 'rb') as f:
-    tucky_method = pickle.load(f)
-    
-with open('functions/z-score.pickle', 'rb') as f:
-    z_score = pickle.load(f)
 
 DISTANCE: int = 5
 SPACE_DISTANCE = 0
@@ -59,7 +57,8 @@ layout = html.Div(children= [
     
     dcc.Graph(id= "video_stats_per_game",
               figure= video_stats_per_game.update_layout(width= L_WIDTH, height= N_HEIGHT),
-              style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+              style= {'position': 'relative', 'padding':'5px', 'border-radius': '20px',
+                      'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                       'display': 'inline-block', 'right': f'{DISTANCE * 2}px'},
               
               config= {'displaylogo': False}),
@@ -67,21 +66,23 @@ layout = html.Div(children= [
     
     html.Div(["Choose a game:",
         dcc.Dropdown(GAMES, "Minecraft" ,id= "game_dropdown")],
-                     style= {'position': 'relative', 'display': 'inline-block',
+                     style= {'position': 'relative','padding':'5px', 'border-radius': '20px',
+                             'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                             'width': f'{L_WIDTH}px', 'right': f'{DISTANCE * 2}px'}),
 
     
     dcc.Graph(id= "duration_vs_view",
               style= {'position': 'relative', 'display': 'inline-block', 'right': f'{DISTANCE * 2}px',
                       'width': f'{L_WIDTH}px', 'top': f'{DISTANCE * 2}px',
-                      'border': f'2px solid {THEME_COLORS[0]}'},
+                      'padding':'5px', 'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',},
               
               config= {'displaylogo': False}),
     
     
     dcc.Graph(id= "stats_growth",
           style= {'top': f'{DISTANCE * 4}px', 'position': 'relative', 'display': 'inline-block',
-                  'width': f'{L_WIDTH}px', 'border': f'2px solid {THEME_COLORS[0]}',
+                  'width': f'{L_WIDTH}px', 'padding':'5px', 'border-radius': '20px',
+                  'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                   'right': f'{DISTANCE * 2}px'},
               
           config= {'displaylogo': False}),
@@ -89,7 +90,8 @@ layout = html.Div(children= [
     
     dcc.Graph(id= "top_tags",
           style= {'top': f'{DISTANCE * 6}px', 'position': 'relative', 'display': 'inline-block',
-                  'width': f'{L_WIDTH}px', 'border': f'2px solid {THEME_COLORS[0]}',
+                  'width': f'{L_WIDTH}px', 'padding':'5px', 'border-radius': '20px',
+                  'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                   'right': f'{DISTANCE * 2}px'},
               
           config= {'displaylogo': False}),

@@ -1,5 +1,7 @@
 # --------------------------Import packeges----------------------
 from dash import html, callback, Input, Output, register_page, dcc
+from functions import tucky_method as tucky
+from functions import z_score
 import dash
 import os
 import plotly.express as px
@@ -11,9 +13,6 @@ import pandas as pd
 
 pio.templates.default = "ggplot2"
 os.chdir(r"C:\Users\Muhammad\Documents\Data science projects\Youtube gaming analysis\Data analysis")
-
-from functions import tucky
-from functions import z_score
 # ---------------------------------------------------------------
 
 
@@ -61,7 +60,8 @@ layout = html.Div(children= [
         id='channel_subs_per_country',
         figure= channel_subs_per_country.update_layout(width= N_WIDTH, height= N_HEIGHT),
         
-        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+        style= {'position': 'relative',
+                'padding':'5px', 'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                 'display': 'inline-block', 'right': f'{DISTANCE}px'},
         
         config= {'displaylogo': False}),
@@ -71,7 +71,8 @@ layout = html.Div(children= [
         id= 'youtubers_with_social_accounts',
         figure= youtubers_with_social_accounts.update_layout(width= N_WIDTH, height= N_HEIGHT),
         
-        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+        style= {'position': 'relative',
+                'padding':'5px', 'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                 'display': 'inline-block', 'bottom': '0px', 'left': f'{DISTANCE * 2}px'},
         
         config= {'displaylogo': False}),
@@ -82,7 +83,8 @@ layout = html.Div(children= [
         figure= total_subs_vs_start_date.update_layout(width= L_WIDTH + DISTANCE,
                                                        height= N_HEIGHT),
     
-        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+        style= {'position': 'relative',
+                'padding':'5px', 'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                 'display': 'inline-block', 'top': f'{DISTANCE * 3}px', 'right': '0px'},
     
          config= {'displaylogo': False}),
@@ -94,12 +96,13 @@ layout = html.Div(children= [
                         step= 100,
                         value=[10000, 200000], id= 'subs_slider',
                         marks= None, tooltip={"placement": "bottom", "always_visible": False})],
-                        style= {'position': 'relative', 'display': 'inline-block', 'top': f'{DISTANCE * 3}px',
+                        style= {'position': 'relative', 'display': 'inline-block', 'top': f'{DISTANCE * 4}px',
                                 'width': f'{L_WIDTH}px'}),
     
     
     dcc.Graph(id='channels_subs_growth',
-              style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+              style= {'position': 'relative', 
+                      'padding':'5px', 'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                       'display': 'inline-block', 'bottom': f'{DISTANCE}px'},
     
               config= {'displaylogo': False}),
@@ -108,7 +111,8 @@ layout = html.Div(children= [
     dcc.Graph(
         id= 'subs_vs_channel_name_len',
         figure= subs_vs_channel_name_len.update_layout(width= L_WIDTH, height= N_HEIGHT),
-        style= {'position': 'relative', 'border': f'2px solid {THEME_COLORS[0]}',
+        style= {'position': 'relative',
+                'padding':'5px', 'border-radius': '20px', 'box-shadow': '0 3px 5px rgba(0, 0, 0, 0.3)',
                 'display': 'inline-block', 'top': f'{DISTANCE * 2}px'},
         
         config= {'displaylogo': False}),
