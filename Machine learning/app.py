@@ -34,8 +34,6 @@ import googleapiclient.errors
 TEXT_COLUMNS = ["title", "description", "channel_name", "about"]
 NUMERICS = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64',
             'uint16', 'uint32', 'uint64', float, int]
-
-os.chdir(r"C:\Users\Muhammad\Documents\Data science projects\Youtube gaming analysis\") # ML & NLP analysis
 # ============================================================
 
 

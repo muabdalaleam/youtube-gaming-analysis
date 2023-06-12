@@ -19,7 +19,7 @@ jobs:
           pip install -r ../../requirements.txt
 
       - name: Run games data updater
-        run: python "../../Data engineering\data updater\games_updater.py"
+#        run: python Data\ engineering/data\ updater/games_updater.py
 
       - name: Run videos & channels updater
-        run: python "../../Data engineering\data updater\update.py"
+#        run: python Data\ engineering/data\ updater/update.py
