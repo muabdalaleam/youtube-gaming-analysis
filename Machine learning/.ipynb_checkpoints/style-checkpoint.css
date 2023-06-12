@@ -1,0 +1,46 @@
+body {
+    background-color: lightblue;
+    color: #0f0f0f;
+}
+
+.stTextInput> div>div>input {
+    background-color: #d9d9d9;
+    font-family: 'Tahoma', sans-serif;
+    color: black;
+/*     position: relative;
+    bottom: 50px; */
+}
+
+
+span.css-9ycgxx.exg6vvm12 {
+    color: #0f0f0f;
+}
+
+div.st-cu.st-bg.st-cv.st-cw.st-cc.st-bh.st-cx.st-cy.st-cz {
+  color: #fff;
+}
+
+svg.e1fb0mya1.css-noeb3a.ex0cdmw0 {
+    color: #0f0f0f;
+}
+
+small.css-7oyrr6.euu6i2w0 {
+    color: #0f0f0f;
+}
+
+
+input.st-be.st-bz.st-c0.st-c1.st-c2.st-c3.st-c4.st-c5.st-c6.st-c7.st-c8.st-b8.st-c9.st-ca.st-cb.st-cc.st-cd.st-ce.st-cf.st-cg.st-ae.st-af.st-ag.st-ch.st-ai.st-aj.st-by.st-ci.st-cj {
+    color: black;
+}
+
+st-bf st-cg st-db st-dc st-dd st-de st-ch st-cj st-ci st-ck st-cl st-b8 st-df st-cb st-bi st-dg st-c4 st-c5 st-c6 st-c7 st-ae st-af st-ag st-be st-ai st-aj st-bt st-dh st-di {
+    color: black;
+}
+
+section.css-1imwt62.e1fqkh3o11 {
+    background-color: black;
+}
+
+div[data-baseweb="select"] > div {
+    color: #0f0f0f;
+}
