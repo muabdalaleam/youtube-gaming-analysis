@@ -17,7 +17,6 @@ from datetime import datetime
 import pandas as pd
 
 pio.templates.default = "ggplot2"
-os.chdir(r"C:\Users\Muhammad\Documents\Data science projects\Youtube gaming analysis\Data analysis")
 # ---------------------------------------------------------------
 
 
