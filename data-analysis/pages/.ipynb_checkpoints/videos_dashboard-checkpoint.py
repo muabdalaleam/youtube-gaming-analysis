@@ -11,12 +11,12 @@ pio.templates.default = "ggplot2"
 
 
 # -------------Reading data and setting constants----------------
-videos_like_per_country = pio.read_json("plots/json/videos_like_per_country.json")
-video_stats_growth_per_time = pio.read_json("plots/json/video_stats_growth_per_time.json")
-social_accounts_affect_on_vid_stats = pio.read_json("plots/json/social_accounts_affect_on_vid_stats.json")
-duration_vs_views = pio.read_json("plots/json/desc_len_vs_views_scatter_plot.json")
-likes_vs_views = pio.read_json("plots/json/likes_vs_views_bubble_chart.json")
-video_stats_per_tag = pio.read_json("plots/json/video_stats_per_tag.json")
+videos_like_per_country              = pio.read_json("data-analysis/plots/json/videos_like_per_country.json")
+video_stats_growth_per_time          = pio.read_json("data-analysis/plots/json/video_stats_growth_per_time.json")
+social_accounts_affect_on_vid_stats  = pio.read_json("data-analysis/plots/json/social_accounts_affect_on_vid_stats.json")
+duration_vs_views                    = pio.read_json("data-analysis/plots/json/desc_len_vs_views_scatter_plot.json")
+likes_vs_views                       = pio.read_json("data-analysis/plots/json/likes_vs_views_bubble_chart.json")
+video_stats_per_tag                  = pio.read_json("data-analysis/plots/json/video_stats_per_tag.json")
 
     
 THEME_COLORS = ["#2e2e2e", "#fc0303"]

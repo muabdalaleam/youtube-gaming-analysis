@@ -20,23 +20,24 @@ pio.templates.default = "ggplot2"
 
 # -------------Reading data and setting constants----------------
 
-base_games = pd.read_pickle("../cleaned-files/base_games.pickle")
-stacked_games = pd.read_pickle("../cleaned-files/stacked_games_df.pickle")
+base_games     = pd.read_pickle("cleaned-files/base_games.pickle")
+stacked_games  = pd.read_pickle("cleaned-files/stacked_games_df.pickle")
 
 
-video_stats_per_game = pio.read_json('plots/json/video_stats_per_game.json')
+video_stats_per_game = pio.read_json("data-analysis/plots/json/video_stats_per_game.json")
 
-THEME_COLORS = ["#2e2e2e", "#fc0303", "lightgrey"]
+THEME_COLORS        = ["#2e2e2e", "#fc0303", "lightgrey"]
 EXERNAL_STYLESHEETS = ['assets/style.css']
+
 TODAY = datetime.now().strftime("%Y-%m-%d")
 TODAY = pytz.utc.localize(datetime.strptime(TODAY, "%Y-%m-%d"))
 
 GAMES = [*base_games["game"].unique()]
 
-DISTANCE: int = 5
-SPACE_DISTANCE = 0
-N_WIDTH: int = 600 # normal width
-L_WIDTH: int = (N_WIDTH * 2) + DISTANCE # large width
+DISTANCE       :int = 5
+SPACE_DISTANCE :int = 0
+N_WIDTH        :int = 600 # normal width
+L_WIDTH        :int = (N_WIDTH * 2) + DISTANCE # large width
 
 N_HEIGHT: int = 500
 L_HEIGHT: int = (N_HEIGHT * 2) + DISTANCE

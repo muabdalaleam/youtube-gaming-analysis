@@ -15,14 +15,14 @@ pio.templates.default = "ggplot2"
 
 
 # -------------Reading data and setting constants----------------
-stacked_channels = pd.read_pickle("../cleaned-files/stacked_channels.pickle")
+stacked_channels = pd.read_pickle("cleaned-files/stacked_channels.pickle")
 
-subs_vs_channel_name_len = pio.read_json("plots/json/subs_vs_channel_name_len_line_chart.json")
-video_stats_per_tag = pio.read_json("plots/json/video_stats_per_tag.json")
-total_subs_vs_start_date = pio.read_json("plots/json/total_subs_for_channels_per_start_date.json")
-tags_appendings_per_vid = pio.read_json("plots/json/tags_appendings_per_vid_bar_chart.json")
-channel_subs_per_country = pio.read_json("plots/json/channels_subs_per_country.json")
-youtubers_with_social_accounts = pio.read_json("plots/json/youtubers_count_with_social_accounts.json")
+subs_vs_channel_name_len         = pio.read_json("data-analysis/plots/json/subs_vs_channel_name_len_line_chart.json")
+video_stats_per_tag              = pio.read_json("data-analysis/plots/json/video_stats_per_tag.json")
+total_subs_vs_start_date         = pio.read_json("data-analysis/plots/json/total_subs_for_channels_per_start_date.json")
+tags_appendings_per_vid          = pio.read_json("data-analysis/plots/json/tags_appendings_per_vid_bar_chart.json")
+channel_subs_per_country         = pio.read_json("data-analysis/plots/json/channels_subs_per_country.json")
+youtubers_with_social_accounts   = pio.read_json("data-analysis/plots/json/youtubers_count_with_social_accounts.json")
 
 # with open('functions/z-score.pickle', 'rb') as f:
 #     z_score = pickle.load(f)
@@ -35,13 +35,13 @@ outliers = z_score(stacked_channels["subscribers"].to_numpy())
 outliers_indexes = np.array(*np.where(np.isin(stacked_channels["subscribers"], outliers)))
 stacked_channels = stacked_channels.drop(outliers_indexes)
 
-DISTANCE: int = 5
+DISTANCE: int  = 5
 SPACE_DISTANCE = 0
-N_WIDTH: int = 600 # normal width
-L_WIDTH: int = (N_WIDTH * 2) + DISTANCE # large width
+N_WIDTH: int   = 600 # normal width
+L_WIDTH: int   = (N_WIDTH * 2) + DISTANCE # large width
 
-N_HEIGHT: int = 500
-L_HEIGHT: int = (N_HEIGHT * 2) + DISTANCE
+N_HEIGHT: int  = 500
+L_HEIGHT: int  = (N_HEIGHT * 2) + DISTANCE
 # ---------------------------------------------------------------
 
 
