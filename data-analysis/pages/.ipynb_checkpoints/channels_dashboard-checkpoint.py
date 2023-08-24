@@ -17,7 +17,7 @@ pio.templates.default = "ggplot2"
 
 
 # -------------Reading data and setting constants----------------
-stacked_channels = pd.read_pickle("../Cleaned files/stacked_channels.pickle")
+stacked_channels = pd.read_pickle("../cleaned-files/stacked_channels.pickle")
 
 subs_vs_channel_name_len = pio.read_json("plots/json/subs_vs_channel_name_len_line_chart.json")
 video_stats_per_tag = pio.read_json("plots/json/video_stats_per_tag.json")

@@ -22,8 +22,8 @@ pio.templates.default = "ggplot2"
 
 # -------------Reading data and setting constants----------------
 
-base_games = pd.read_pickle("../Cleaned files/base_games.pickle")
-stacked_games = pd.read_pickle("../Cleaned files/stacked_games_df.pickle")
+base_games = pd.read_pickle("../cleaned-files/base_games.pickle")
+stacked_games = pd.read_pickle("../cleaned-files/stacked_games_df.pickle")
 
 
 video_stats_per_game = pio.read_json('plots/json/video_stats_per_game.json')

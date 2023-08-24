@@ -83,11 +83,11 @@ for processor_name, processor in preprocessors.items():
         preprocessors[processor_name] = dill.load(f)
 
         
-subs_vs_channel_name_len = pio.read_json("../Data analysis/plots/json/subs_vs_channel_name_len_line_chart.json")
-social_accounts_affect_on_vid_stats = pio.read_json("../Data analysis/plots/json/social_accounts_affect_on_vid_stats.json")
-video_stats_per_game = pio.read_json('../Data analysis/plots/json/video_stats_per_game.json')
-total_subs_vs_start_date = pio.read_json("../Data analysis/plots/json/total_subs_for_channels_per_start_date.json")
-duration_vs_views = pio.read_json("../Data analysis/plots/json/desc_len_vs_views_scatter_plot.json")
+subs_vs_channel_name_len = pio.read_json("../data-analysis/plots/json/subs_vs_channel_name_len_line_chart.json")
+social_accounts_affect_on_vid_stats = pio.read_json("../data-analysis/plots/json/social_accounts_affect_on_vid_stats.json")
+video_stats_per_game = pio.read_json('../data-analysis/plots/json/video_stats_per_game.json')
+total_subs_vs_start_date = pio.read_json("../data-analysis/plots/json/total_subs_for_channels_per_start_date.json")
+duration_vs_views = pio.read_json("../data-analysis/plots/json/desc_len_vs_views_scatter_plot.json")
 # ============================================================
 
 
@@ -723,8 +723,10 @@ if subpage == "Statistics of your channel":
     col3.metric("AVG Views for one like", f"{np.mean(df['viewCount'] / df['likeCount']):.2f}")
     col4.metric("Views count for one subscriber", f"{np.mean(df['total_views'] / df['subscribers']):.2f}")
 
-    fig = px.bar(df.sort_values(by= "likeCount"), x= "likeCount", y= "title", title="Most liked videos.", width=1600, height= 1000,
+    fig = px.bar(df.sort_values(by= "likeCount"), x= "likeCount", y= "title", title="Most liked videos.", width=900, height= 600,
                  orientation='h', labels= {"likeCount": "Likes", "title": "Video name"})
+
+    fig.update_traces(marker=dict(color='red'))
     
     st.plotly_chart(fig)
 # ============================================================
