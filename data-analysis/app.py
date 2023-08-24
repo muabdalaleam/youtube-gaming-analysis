@@ -4,6 +4,8 @@ import dash
 
 THEME_COLORS = ["#2e2e2e", "#fc0303"]
 app = Dash(__name__, use_pages=True)
+server = app.server
+
 app._favicon = ("logo.png")
 
 
@@ -61,4 +63,3 @@ app.layout = html.Div([
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-        # [html.Div(dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"]))
