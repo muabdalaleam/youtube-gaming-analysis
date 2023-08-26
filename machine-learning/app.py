@@ -5,7 +5,7 @@ import io
 import re
 import dill
 import tensorflow as tf
-import inspect
+import inspecty
 import shutil
 import pytz
 import keras

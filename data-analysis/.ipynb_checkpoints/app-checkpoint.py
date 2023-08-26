@@ -30,7 +30,7 @@ def create_button(dashboard: str) -> dcc.Link:
              href= f"{dashboard['relative_path']}",
              style= {"background-color": THEME_COLORS[0], "padding": "15px 25px",
                      "color": "white", "text-decoration": "none", "position": "relative",
-                     'border': '4px solid white', "top": "80px", "border-radius": "25px"})
+                     'margin': '5px', "top": "30px", "border-radius": "25px"})
 
     return  button
 
@@ -38,27 +38,21 @@ def create_button(dashboard: str) -> dcc.Link:
 app.layout = html.Div([
     
     html.Center([html.H1(["Youtube ", html.Span("Gaming", style= {"color": THEME_COLORS[1]}),
-                          " Analysis Dashboards"]),
+                          " Analysis Dashboards"], style= {'font-size': '45px'}),
                  
-    dcc.Markdown("""**Welcome** in my project's dashboard app this app will show you what is
-    the data sayig about all things related to youtube gaming content."""),
+    dcc.Markdown("""Welcome To My YouTube Gaming Analysis 👋""", style= {'font-size': '25px'}),
 
-    # Creating buttons
+
     create_button(channels_dashboard),
 
     create_button(games_dashboard),
 
     create_button(videos_dashboard),
-                 
-    dcc.Link(f"ML App",
-             href= "https://google.com",
-             style= {"background-color": THEME_COLORS[1], "padding": "15px 25px",
-                     "color": "white", "text-decoration": "none", "position": "relative",
-                     'border': '4px solid white', "top": "20px", "border-radius": "25px",
-                     'right': '320px'}),
 
-    # Page container to host the page output
-    html.Div([dash.page_container], style= {"top": "100px", 
+    html.Hr(style= {"top": "70px", "position": "relative", 'border-top': '1px dashed black',
+                    'width': '650px'}),
+
+    html.Div([dash.page_container], style= {"top": "80px", 
                                             "position": "relative"})])])
 
 if __name__ == '__main__':
