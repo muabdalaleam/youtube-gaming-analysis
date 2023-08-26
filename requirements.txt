@@ -43,3 +43,4 @@ scikit-learn
 opencv-python
 scipy
 joblib
+protobuf==3.20.*

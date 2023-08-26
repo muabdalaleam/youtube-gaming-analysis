@@ -32,24 +32,23 @@ from streamlit_option_menu import option_menu
 import googleapiclient.errors
 
 TEXT_COLUMNS = ["title", "description", "channel_name", "about"]
-NUMERICS = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64',
-            'uint16', 'uint32', 'uint64', float, int]
+NUMERICS     = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64',
+                'uint16', 'uint32', 'uint64', float, int]
 # ============================================================
 
 
 
 # ===================Settting up YouTube build===========z=====
-API_KEY: str = "AIzaSyAyULusNp9X9wa9fHp_PHYIeeRpdh87YC0"
-
+API_KEY          = "AIzaSyAyULusNp9X9wa9fHp_PHYIeeRpdh87YC0"
 API_SERVICE_NAME = "youtube"
-API_VERSION = "v3"
+API_VERSION      = "v3"
 
 
 youtube = build(
     API_SERVICE_NAME, API_VERSION, developerKey= API_KEY)
 
 st.set_page_config(layout="wide", page_title='Youtube gaming analysis ML app.',
-                        page_icon = '../imgs/logo.png')
+                    page_icon = 'imgs/logo.png')
 # ============================================================
 
 
@@ -66,28 +65,22 @@ preprocessors = {"PCA": None, "Scaler": None, "Vectorizer": None,
 
 
 for encoder_name, encoder in encoders.items():
-    with open(f"encoders/{encoder_name}.pickle", "rb") as f:
+    with open(f"machine-learning/encoders/{encoder_name}.pickle", "rb") as f:
         encoders[encoder_name] = dill.load(f)
 
 for model_name, model in models.items():
 
     if model_name == "Nueral network":
-        models[model_name] = tf.keras.models.load_model("models/NN regressor")
+        models[model_name] = tf.keras.models.load_model("machine-learning/models/NN regressor")
 
     else:
-        with open(f"models/{model_name}.pickle", "rb") as f:
+        with open(f"machine-learning/models/{model_name}.pickle", "rb") as f:
             models[model_name] = dill.load(f)
 
 for processor_name, processor in preprocessors.items():
-    with open(f"preprocessors/{processor_name}.pickle", "rb") as f:
+    with open(f"machine-learning/preprocessors/{processor_name}.pickle", "rb") as f:
         preprocessors[processor_name] = dill.load(f)
 
-        
-subs_vs_channel_name_len = pio.read_json("../data-analysis/plots/json/subs_vs_channel_name_len_line_chart.json")
-social_accounts_affect_on_vid_stats = pio.read_json("../data-analysis/plots/json/social_accounts_affect_on_vid_stats.json")
-video_stats_per_game = pio.read_json('../data-analysis/plots/json/video_stats_per_game.json')
-total_subs_vs_start_date = pio.read_json("../data-analysis/plots/json/total_subs_for_channels_per_start_date.json")
-duration_vs_views = pio.read_json("../data-analysis/plots/json/desc_len_vs_views_scatter_plot.json")
 # ============================================================
 
 
@@ -98,7 +91,7 @@ def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
         
-local_css("style.css")
+local_css("machine-learning/style.css")
 
 st.markdown("<h1 style='text-align: center;'>" + \
             "Youtube <span style= \"color: red\">Gaming</span> analysis ML app</h1>", unsafe_allow_html=True)
@@ -174,13 +167,13 @@ if subpage == "Taking required inputs":
             st.error(f"Please specfy your: {input_}")
             
         else:
-            with open(f"temp/{input_}", "wb") as f:
+            with open(f"machine-learning/temp/{input_}", "wb") as f:
                 pickle.dump(globals()[input_], f)
 
     
 for input_ in inputs:
     
-    with open(f"temp/{input_}", "rb") as f:
+    with open(f"machine-learning/temp/{input_}", "rb") as f:
         
         variable_name = input_
         globals()[variable_name] = pickle.load(f)
