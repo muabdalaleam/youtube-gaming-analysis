@@ -1,4 +1,4 @@
-# YouTube Gaming Analysis Project
+at# YouTube Gaming Analysis Project
 Howdy, 😃 Welcome in my humble project in this project I am aiming to
 
 - Analyze youtube gaming data 📈
@@ -15,4 +15,4 @@ Howdy, 😃 Welcome in my humble project in this project I am aiming to
 | EDA process notebook             | [My EDA notebook](https://nbviewer.org/github/muhammed-abdelaleam/Youtube-gaming-analysis/blob/master/Data%20analysis/EDA%20and%20Feature%20engineering.ipynb) |
 | Jupyter notebook viewer | [My project in the cloud](https://nbviewer.org/github/muhammed-abdelaleam/Youtube-gaming-analysis/tree/master/)|
 
-*The way to use the ML app is to run it locally (see the steps in the project Do‘How to use this project’ section)
+*The way to use the ML app is to run it locally (see the steps in the project Documentation in ‘How to use this project’ section)
