@@ -66,7 +66,17 @@ def search_channels() -> set[str]:
 	return channels_ids
 
 
-def get_channels_data(channels_ids: list) -> pd.DataFrame:
+def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
+	"""
+	Requests the data for 50 channels ids a time and add them to pandas df
+	and after finishing the looping over all ids returns a pandas df of the
+	channels data.
+
+	@params: set of channels ids
+	@returns: a pandas dataframe with the channel stats and data
+	"""
+
+	url = 'https://www.googleapis.com/youtube/v3/channels'
 	raise NotImplementedError
 
 
