@@ -28,10 +28,22 @@ CHANNELS_COUNT: int = 100
 VIDEOS_PER_CHANNEL: int = 10
 
 SEARCH_QUERY = "gaming"
-API_KEY = os.getenv('YOUTUBE_API')
+API_KEY = 
 
 
-# helper function
+def get_api_key():
+	api_keys = [
+		os.getenv('YOUTUBE_API_1'),
+		os.getenv('YOUTUBE_API_2'),
+		os.getenv('YOUTUBE_API_3'),
+		os.getenv('YOUTUBE_API_4'),
+		os.getenv('YOUTUBE_API_5')
+	]
+
+	while True:
+		for key in api_keys:
+			yield item
+
 def chunker(seq, size):
     return (seq[pos:pos + size] for pos in range(0, len(seq), size))
 
@@ -49,7 +61,7 @@ def search_channels(save_page_token= False) -> set[str]:
 
 	url = 'https://www.googleapis.com/youtube/v3/search'
 	params = {
-		"key": API_KEY,
+		"key": get_api_key(),
 		"part": "snippet",
 		"q": SEARCH_QUERY,
 		"type": "channel",
@@ -103,11 +115,9 @@ def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
 
 	for channel_ids_block in chunker(list(channels_ids), MAX_RESULTS):
 
-		print(channel_ids_block)
-
 		url = 'https://www.googleapis.com/youtube/v3/channels'
 		params = {
-			"key": API_KEY,
+			"key": get_api_key(),
 			"part": "snippet,statistics,contentDetails",
 			"id": ','.join(channel_ids_block),
 			"maxResults": MAX_RESULTS
@@ -117,7 +127,7 @@ def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
 		response.raise_for_status()
 
 		data = response.json()
-		print(data)
+
 		for channel in data['items']:
 			channel_data = {
 					"channel_name":     channel["snippet"]["title"],
@@ -129,27 +139,41 @@ def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
 					"about":            channel["snippet"]["description"]
 				}
 
-		df.append(channel_data, ignore_index=True) # tofix
+			df = pd.concat([df, pd.DataFrame([channel_data])], ignore_index=True)
 
 	return df
 
 
-def get_videos(playlist_ids: list) -> list:
+def get_videos_ids(playlist_ids: list) -> list:
+	"""
+	This function takes the videos IDs list and request
+	for the statistics of the videos then saves them into
+	a DataFrame.
+
+	@params: the playlist ids of any channel
+	@returns: returns a list of videos ids 
+	"""
+
+	for playlist_id in playlist_ids:
+
+		url = 'https://www.googleapis.com/youtube/v3/playlistItems'
+		params = {
+			"key": get_api_key(),
+			"part": "snippet",
+			"maxResults": ','.join(channel_ids_block),
+			"playlistId":  playlist_id
+		}
+
 	raise NotImplementedError
 
 
 def get_videos_data(videos_ids: list) -> pd.DataFrame:
 	raise NotImplementedError
 
-# testing only
-def main():
-
-	# channels_ids: set = search_channels()
-
+# Debugging only
+if __name__ == '__main__':
 	with open('../data/channels-ids.txt', 'r') as f:
 		channels_ids = eval(f.read())
 
 	df = get_channels_data(channels_ids)
-
-if __name__ == '__main__':
-	main()
+	print(len(df))
