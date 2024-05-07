@@ -75,17 +75,19 @@ def search_channels(save_page_token= False) -> set[str]:
 		with open('pagetoken.txt', 'r') as page_token:
 			params['pageToken'] = page_token.read()
 
-	channels_ids = set()
+	channels_ids = []
 
 	for _ in range(int(CHANNELS_COUNT / MAX_RESULTS)):
 
 		response = requests.get(url, params=params)
-		response.raise_for_status()
+
+		if response.status_code != 200:
+			return channels_ids
 
 		data = response.json()
 
 		for channel in data['items']:
-			channels_ids.add(channel['id']['channelId'])
+			channels_ids.append(channel['id']['channelId'])
 			next_page_token = data.get("nextPageToken")
 
 			if next_page_token:
@@ -102,7 +104,7 @@ def search_channels(save_page_token= False) -> set[str]:
 
 	return channels_ids
 
-def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
+def get_channels_data(channels_ids: list) -> pd.DataFrame:
 	"""
 	Requests the data for 50 channels ids a time and add them to pandas df
 	and after finishing the looping over all ids returns a pandas df of the
@@ -115,7 +117,7 @@ def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
 	df = pd.DataFrame(columns= ['channel_name', 'subscribers', 'total_views',
 		'date', 'playlist_id', 'video_count', 'about'])
 
-	for channel_ids_block in chunker(list(channels_ids), MAX_RESULTS):
+	for channel_ids_block in chunker(channels_ids, MAX_RESULTS):
 
 		url = 'https://www.googleapis.com/youtube/v3/channels'
 		params = {
@@ -126,7 +128,8 @@ def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
 		}
 
 		response = requests.get(url, params=params)
-		response.raise_for_status()
+		if response.status_code != 200:
+			return df
 
 		data = response.json()
 
@@ -187,36 +190,47 @@ def get_videos_ids(playlist_ids: list) -> list:
 
 def get_videos_data(videos_ids: list) -> pd.DataFrame:
 
-	df = pd.DataFrame(columns= ['channel_name', 'subscribers', 'total_views',
-	'date', 'playlist_id', 'video_count', 'about'])
+	df = pd.DataFrame(columns= ['channel_name', 'title', 'description',
+		'tags', 'published_at', 'view_count', 'like_count', 'comment_count',
+		'duration', 'definition'
+	])
 
-	for channel_ids_block in chunker(list(channels_ids), MAX_RESULTS):
+	for videos_ids_block in chunker(videos_ids, MAX_RESULTS):
 
-		url = 'https://www.googleapis.com/youtube/v3/channels'
+		url = 'https://www.googleapis.com/youtube/v3/videos'
 		params = {
 			"key": next(API_KEY_GENERATOR),
-			"part": "snippet,statistics,contentDetails",
-			"id": ','.join(channel_ids_block),
+			"part": "snippet,contentDetails,statistics",
+			"id": ','.join(videos_ids_block),
 			"maxResults": MAX_RESULTS
 		}
 
 		response = requests.get(url, params=params)
-		response.raise_for_status()
+		if response.status_code != 200:
+			print('An error happened: ', response.status_code)
+			return df
+
+		print(response.json())
 
 		data = response.json()
 
-		for channel in data['items']:
-			channel_data = {
-					"channel_name":     channel["snippet"]["title"],
-					"subscribers":      channel["statistics"]["subscriberCount"],
-					"total_views":      channel["statistics"]["viewCount"],
-					"date":             channel["snippet"]["publishedAt"],
-					"playlist_id":      channel["contentDetails"]["relatedPlaylists"]["uploads"],
-					"video_count":      channel["statistics"]["videoCount"],
-					"about":            channel["snippet"]["description"]
-				}
+		for video in data['items']:
+			video_data = {
+				"channel_name":     video["snippet"]["channel_title"],
+				"title":            video["snippet"]["title"],
+				"description":      video["snippet"]["description"],
+				"tags":             video["snippet"]["tags"],
+				"published_at":     video["snippet"]["publishedAt"],
+				"view_count":       video["statistics"]["viewCount"],
+				"like_count":       video["statistics"]["likeCount"],
+				"comment_count":    video["statistics"]["commentCount"],
+				"definition":       video["contentDetails"]["definition"],
+				"duration":         video["contentDetails"]["duration"]
+			}
 
-			df = pd.concat([df, pd.DataFrame([channel_data])], ignore_index=True)
+			print('Hi', video_data)
+
+			df = pd.concat([df, pd.DataFrame([video_data])], ignore_index=True)
 
 	return df
 
@@ -231,4 +245,6 @@ if __name__ == '__main__':
 	with open('videos-ids.txt', 'r') as f:
 		vid_ids = ast.literal_eval(f.read())
 
-	print(len(vid_ids))
+	vids_df = get_videos_data(vid_ids[:50])
+
+	print(vids_df.head())
