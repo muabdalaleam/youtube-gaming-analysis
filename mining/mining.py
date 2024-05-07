@@ -14,6 +14,7 @@ Note: some functions in this code is imported by update.py
 """
 
 import os
+import ast
 import pandas as pd
 import sqlite3
 import requests
@@ -25,10 +26,10 @@ load_dotenv()
 
 MAX_RESULTS: int = 50
 CHANNELS_COUNT: int = 100
-VIDEOS_PER_CHANNEL: int = 10
+VIDEOS_PER_CHANNEL: int = 20
 
 SEARCH_QUERY = "gaming"
-API_KEY = 
+# API_KEY = 
 
 
 def get_api_key():
@@ -40,13 +41,15 @@ def get_api_key():
 		os.getenv('YOUTUBE_API_5')
 	]
 
+	api_keys_cycle = itertools.cycle(api_keys)
+
 	while True:
-		for key in api_keys:
-			yield item
+		yield next(api_keys_cycle)
 
 def chunker(seq, size):
     return (seq[pos:pos + size] for pos in range(0, len(seq), size))
 
+API_KEY_GENERATOR = get_api_key()
 
 def search_channels(save_page_token= False) -> set[str]:
 	"""
@@ -61,7 +64,7 @@ def search_channels(save_page_token= False) -> set[str]:
 
 	url = 'https://www.googleapis.com/youtube/v3/search'
 	params = {
-		"key": get_api_key(),
+		"key": next(API_KEY_GENERATOR),
 		"part": "snippet",
 		"q": SEARCH_QUERY,
 		"type": "channel",
@@ -99,7 +102,6 @@ def search_channels(save_page_token= False) -> set[str]:
 
 	return channels_ids
 
-
 def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
 	"""
 	Requests the data for 50 channels ids a time and add them to pandas df
@@ -117,7 +119,7 @@ def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
 
 		url = 'https://www.googleapis.com/youtube/v3/channels'
 		params = {
-			"key": get_api_key(),
+			"key": next(API_KEY_GENERATOR),
 			"part": "snippet,statistics,contentDetails",
 			"id": ','.join(channel_ids_block),
 			"maxResults": MAX_RESULTS
@@ -143,7 +145,6 @@ def get_channels_data(channels_ids: set[str]) -> pd.DataFrame:
 
 	return df
 
-
 def get_videos_ids(playlist_ids: list) -> list:
 	"""
 	This function takes the videos IDs list and request
@@ -154,26 +155,80 @@ def get_videos_ids(playlist_ids: list) -> list:
 	@returns: returns a list of videos ids 
 	"""
 
+	videos_ids = []
+
 	for playlist_id in playlist_ids:
 
 		url = 'https://www.googleapis.com/youtube/v3/playlistItems'
 		params = {
-			"key": get_api_key(),
-			"part": "snippet",
-			"maxResults": ','.join(channel_ids_block),
-			"playlistId":  playlist_id
+			"key": next(API_KEY_GENERATOR),
+			"part": "id",
+			"playlistId":  playlist_id,
+			"maxResults": VIDEOS_PER_CHANNEL,
 		}
 
-	raise NotImplementedError
+		response = requests.get(url, params= params)
 
+		if response.status_code != 200:
+			params['maxResults'] = 10
+			response = requests.get(url, params= params)
+
+			if response.status_code != 200:
+				videos_ids.append(None)
+				continue
+
+		data = response.json()['items']
+
+		for vid in data:
+			videos_ids.append(vid['id'])
+
+
+	return videos_ids
 
 def get_videos_data(videos_ids: list) -> pd.DataFrame:
-	raise NotImplementedError
+
+	df = pd.DataFrame(columns= ['channel_name', 'subscribers', 'total_views',
+	'date', 'playlist_id', 'video_count', 'about'])
+
+	for channel_ids_block in chunker(list(channels_ids), MAX_RESULTS):
+
+		url = 'https://www.googleapis.com/youtube/v3/channels'
+		params = {
+			"key": next(API_KEY_GENERATOR),
+			"part": "snippet,statistics,contentDetails",
+			"id": ','.join(channel_ids_block),
+			"maxResults": MAX_RESULTS
+		}
+
+		response = requests.get(url, params=params)
+		response.raise_for_status()
+
+		data = response.json()
+
+		for channel in data['items']:
+			channel_data = {
+					"channel_name":     channel["snippet"]["title"],
+					"subscribers":      channel["statistics"]["subscriberCount"],
+					"total_views":      channel["statistics"]["viewCount"],
+					"date":             channel["snippet"]["publishedAt"],
+					"playlist_id":      channel["contentDetails"]["relatedPlaylists"]["uploads"],
+					"video_count":      channel["statistics"]["videoCount"],
+					"about":            channel["snippet"]["description"]
+				}
+
+			df = pd.concat([df, pd.DataFrame([channel_data])], ignore_index=True)
+
+	return df
 
 # Debugging only
 if __name__ == '__main__':
-	with open('../data/channels-ids.txt', 'r') as f:
-		channels_ids = eval(f.read())
+	
+	# df = pd.read_csv('temp.csv')
+	# playlist_ids = df['playlist_id']
 
-	df = get_channels_data(channels_ids)
-	print(len(df))
+	# vids_ids = get_videos_ids(playlist_ids)
+
+	with open('videos-ids.txt', 'r') as f:
+		vid_ids = ast.literal_eval(f.read())
+
+	print(len(vid_ids))
